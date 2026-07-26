@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ember & Oak — Architectural Living</title>
+    <title>Ember and Oak — Architectural Living</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -305,7 +304,7 @@
             margin-top: 60px;
         }
 
-        /* --- COLLECTION SLIDER CAROUSEL --- */
+        /* --- INFINITE AUTO-LOOP TICKER SECTION --- */
         .collection-section {
             padding: 100px 0 160px 0;
             overflow: hidden;
@@ -313,9 +312,6 @@
 
         .section-header {
             padding: 0 80px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
             margin-bottom: 60px;
         }
 
@@ -324,52 +320,36 @@
             letter-spacing: -0.01em;
         }
 
-        .carousel-controls {
-            display: flex;
-            gap: 16px;
-        }
-
-        .carousel-btn {
-            background: var(--surface-color);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background 0.3s ease, border-color 0.3s ease;
-        }
-
-        .carousel-btn:hover {
-            background: var(--text-primary);
-            color: var(--bg-color);
-            border-color: var(--text-primary);
-        }
-
-        /* Carousel Track Structure */
-        .carousel-viewport {
+        /* Infinite Marquee Track */
+        .ticker-container {
             width: 100%;
             overflow: hidden;
-            padding-left: 80px;
-            cursor: grab;
+            position: relative;
+            display: flex;
         }
 
-        .carousel-viewport:active {
-            cursor: grabbing;
-        }
-
-        .carousel-track {
+        .ticker-track {
             display: flex;
             gap: 40px;
-            transition: transform 0.6s var(--transition-smooth);
-            will-change: transform;
+            width: max-content;
+            animation: infiniteScroll 35s linear infinite;
+        }
+
+        .ticker-container:hover .ticker-track {
+            animation-play-state: paused;
+        }
+
+        @keyframes infiniteScroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-50% - 20px));
+            }
         }
 
         .product-card {
-            min-width: 420px;
+            width: 420px;
             background: var(--surface-color);
             border: 1px solid var(--border);
             display: flex;
@@ -383,6 +363,7 @@
             border-color: rgba(245, 244, 240, 0.3);
         }
 
+        /* Image container scaling on hover */
         .product-image-container {
             width: 100%;
             height: 480px;
@@ -395,11 +376,12 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.7s var(--transition-smooth);
+            transform: scale(1);
+            transition: transform 0.6s var(--transition-smooth);
         }
 
-        .product-card:hover .product-image-container img {
-            transform: scale(1.05);
+        .product-image-container:hover img {
+            transform: scale(1.12);
         }
 
         .product-details {
@@ -484,11 +466,8 @@
                 gap: 40px;
                 padding: 40px;
             }
-            .carousel-viewport {
-                padding-left: 40px;
-            }
             .product-card {
-                min-width: 360px;
+                width: 360px;
             }
         }
 
@@ -511,16 +490,10 @@
                 gap: 20px;
             }
             .product-card {
-                min-width: 300px;
-            }
-            .carousel-viewport {
-                padding-left: 24px;
+                width: 300px;
             }
             .section-header {
                 padding: 0 24px;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 24px;
             }
             footer {
                 flex-direction: column;
@@ -535,7 +508,7 @@
 
     <!-- V-Style Navigation Header -->
     <header id="site-header">
-        <a href="#" class="brand-logo">Ember & Oak</a>
+        <a href="#" class="brand-logo">Ember and Oak</a>
         <nav class="nav-triggers">
             <button class="nav-trigger-btn" data-target="menu-collections">Collections</button>
             <button class="nav-trigger-btn" data-target="menu-story">The Brand</button>
@@ -555,10 +528,10 @@
             </div>
             <div>
                 <ul class="menu-links-list">
-                    <li><a href="#collection-slider">The monolithic Series</a></li>
-                    <li><a href="#collection-slider">Brutalist Seating</a></li>
-                    <li><a href="#collection-slider">Architectural Lighting</a></li>
-                    <li><a href="#collection-slider">Raw Oak Credenzas</a></li>
+                    <li><a href="#collection-ticker">The Monolithic Series</a></li>
+                    <li><a href="#collection-ticker">Brutalist Seating</a></li>
+                    <li><a href="#collection-ticker">Architectural Lighting</a></li>
+                    <li><a href="#collection-ticker">Raw Oak Credenzas</a></li>
                 </ul>
             </div>
         </div>
@@ -597,14 +570,13 @@
     <!-- Hero Video Banner Section -->
     <section class="hero-banner">
         <video autoplay muted loop playsinline>
-            <!-- Using a reliable high-end architectural interior design cinematic background sample -->
             <source src="https://assets.mixkit.co/videos/preview/mixkit-luxury-modern-living-room-interior-design-41619-large.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <h1>Sculpted by Nature, Finished by Hand</h1>
-            <p>Ember & Oak presents a radical synthesis of industrial materiality and organic warmth. Architectural furnishings designed for contemporary spaces.</p>
+            <p>Ember and Oak presents a radical synthesis of industrial materiality and organic warmth. Architectural furnishings designed for contemporary spaces.</p>
         </div>
     </section>
 
@@ -612,7 +584,7 @@
     <section class="brand-history" id="history-section">
         <div class="history-text">
             <h2>Rooted in structural honesty and material depth.</h2>
-            <p>Founded on the principle that furniture should serve as foundational architecture rather than temporary decor, Ember & Oak explores the tension between blackened steel and deeply grained organic wood.</p>
+            <p>Founded on the principle that furniture should serve as foundational architecture rather than temporary decor, Ember and Oak explores the tension between blackened steel and deeply grained organic wood.</p>
             <p>Every silhouette is deliberately restrained. We reject excess ornamentation, allowing the native character, knots, and grain patterns of sustainable timber to dictate the personality of each creation.</p>
         </div>
         <div class="history-image-grid">
@@ -621,20 +593,16 @@
         </div>
     </section>
 
-    <!-- Collection Slider Carousel Section -->
-    <section class="collection-section" id="collection-slider">
+    <!-- Collection Infinite Auto-Loop Section -->
+    <section class="collection-section" id="collection-ticker">
         <div class="section-header">
             <h2>Current Collections</h2>
-            <div class="carousel-controls">
-                <button class="carousel-btn" id="prev-btn" aria-label="Previous slide">&#8592;</button>
-                <button class="carousel-btn" id="next-btn" aria-label="Next slide">&#8594;</button>
-            </div>
         </div>
 
-        <div class="carousel-viewport" id="carousel-viewport">
-            <div class="carousel-track" id="carousel-track">
+        <div class="ticker-container">
+            <div class="ticker-track" id="ticker-track">
                 
-                <!-- Product 1 -->
+                <!-- Product Set 1 -->
                 <article class="product-card">
                     <div class="product-image-container">
                         <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80" alt="The Monolith Sofa">
@@ -648,7 +616,6 @@
                     </div>
                 </article>
 
-                <!-- Product 2 -->
                 <article class="product-card">
                     <div class="product-image-container">
                         <img src="https://images.unsplash.com/photo-1533779283484-8ab4940aa78f?auto=format&fit=crop&w=1000&q=80" alt="Aethel Table">
@@ -662,7 +629,6 @@
                     </div>
                 </article>
 
-                <!-- Product 3 -->
                 <article class="product-card">
                     <div class="product-image-container">
                         <img src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1000&q=80" alt="Komorebi Lounge Chair">
@@ -676,7 +642,6 @@
                     </div>
                 </article>
 
-                <!-- Product 4 -->
                 <article class="product-card">
                     <div class="product-image-container">
                         <img src="https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1000&q=80" alt="Vesper Credenza">
@@ -690,7 +655,72 @@
                     </div>
                 </article>
 
-                <!-- Product 5 -->
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1000&q=80" alt="Silt Pendant Light">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-meta">
+                            <h3 class="product-title">Silt Pendant Light</h3>
+                            <span class="product-price">$1,150</span>
+                        </div>
+                        <p class="product-desc">Hand-spun raw copper shade casting warm downward illumination, hung via a braided textile cord and ceiling canopy.</p>
+                    </div>
+                </article>
+
+                <!-- Duplicate Product Set 2 for Seamless Infinite Loop -->
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80" alt="The Monolith Sofa">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-meta">
+                            <h3 class="product-title">The Monolith Sofa</h3>
+                            <span class="product-price">$4,850</span>
+                        </div>
+                        <p class="product-desc">Low-profile modular seating wrapped in heavy charcoal wool-blend upholstery, anchored by an exposed charred oak internal frame.</p>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1533779283484-8ab4940aa78f?auto=format&fit=crop&w=1000&q=80" alt="Aethel Table">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-meta">
+                            <h3 class="product-title">Aethel Dining Table</h3>
+                            <span class="product-price">$6,200</span>
+                        </div>
+                        <p class="product-desc">Solid European white oak slab featuring hand-charred edges, supported by geometric matte-black architectural steel legs.</p>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1000&q=80" alt="Komorebi Lounge Chair">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-meta">
+                            <h3 class="product-title">Komorebi Lounge Chair</h3>
+                            <span class="product-price">$2,400</span>
+                        </div>
+                        <p class="product-desc">An exercise in ergonomic lightness. Form-pressed walnut veneer shell suspended within a fine-gauge welded steel exoskeleton.</p>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1000&q=80" alt="Vesper Credenza">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-meta">
+                            <h3 class="product-title">Vesper Credenza</h3>
+                            <span class="product-price">$3,900</span>
+                        </div>
+                        <p class="product-desc">Fluted architectural cabinetry crafted from smoked ash wood with integrated brushed brass touch-latch hardware systems.</p>
+                    </div>
+                </article>
+
                 <article class="product-card">
                     <div class="product-image-container">
                         <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1000&q=80" alt="Silt Pendant Light">
@@ -710,11 +740,11 @@
 
     <!-- Footer -->
     <footer>
-        <a href="#" class="brand-logo" style="font-size: 1.1rem;">Ember & Oak</a>
-        <p>&copy; 2026 Ember & Oak Studio. All rights reserved. Introductory Archive.</p>
+        <a href="#" class="brand-logo" style="font-size: 1.1rem;">Ember and Oak</a>
+        <p>&copy; 2026 Ember and Oak Studio. All rights reserved. Introductory Archive.</p>
         <ul class="footer-nav">
             <li><a href="#history-section">Manifesto</a></li>
-            <li><a href="#collection-slider">Index</a></li>
+            <li><a href="#collection-ticker">Index</a></li>
             <li><a href="mailto:concierge@emberandoak.com">Contact</a></li>
         </ul>
     </footer>
@@ -741,11 +771,9 @@
             btn.addEventListener('click', () => {
                 const targetId = btn.getAttribute('data-target');
                 
-                // Clear active states
                 triggerBtns.forEach(b => b.classList.remove('active'));
                 menuPanels.forEach(p => p.classList.remove('active-panel'));
                 
-                // Set current active states
                 btn.classList.add('active');
                 const targetPanel = document.getElementById(targetId);
                 if (targetPanel) {
@@ -759,7 +787,6 @@
 
         closeBtn.addEventListener('click', closeModal);
         
-        // Close on background click inside overlay
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) {
                 closeModal();
@@ -771,80 +798,6 @@
             triggerBtns.forEach(b => b.classList.remove('active'));
             document.body.style.overflow = 'auto';
         }
-
-        /* --- CAROUSEL WITH AUTO-PLAY & HOVER STOP --- */
-        const viewport = document.getElementById('carousel-viewport');
-        const track = document.getElementById('carousel-track');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-
-        let cardWidth = track.querySelector('.product-card').offsetWidth + 40; // Card width + gap
-        let currentIndex = 0;
-        const totalCards = track.querySelectorAll('.product-card').length;
-        const visibleCards = Math.floor(viewport.offsetWidth / cardWidth) || 1;
-        const maxIndex = Math.max(0, totalCards - visibleCards);
-
-        let autoPlayInterval;
-        const autoPlayDelay = 3500; // Time in ms between slides
-
-        function updateCarouselPosition() {
-            track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
-        }
-
-        function nextSlide() {
-            if (currentIndex < maxIndex) {
-                currentIndex++;
-            } else {
-                currentIndex = 0; // Loop back to start
-            }
-            updateCarouselPosition();
-        }
-
-        function prevSlide() {
-            if (currentIndex > 0) {
-                currentIndex--;
-            } else {
-                currentIndex = maxIndex; // Loop to end
-            }
-            updateCarouselPosition();
-        }
-
-        // Start Auto-play
-        function startAutoPlay() {
-            autoPlayInterval = setInterval(nextSlide, autoPlayDelay);
-        }
-
-        // Stop Auto-play
-        function stopAutoPlay() {
-            clearInterval(autoPlayInterval);
-        }
-
-        // Event Listeners for Controls
-        nextBtn.addEventListener('click', () => {
-            nextSlide();
-        });
-
-        prevBtn.addEventListener('click', () => {
-            prevSlide();
-        });
-
-        // Hover pause logic requested by user
-        viewport.addEventListener('mouseenter', stopAutoPlay);
-        viewport.addEventListener('mouseleave', startAutoPlay);
-
-        // Window resize adjustment
-        window.addEventListener('resize', () => {
-            cardWidth = track.querySelector('.product-card').offsetWidth + 40;
-            const newVisible = Math.floor(viewport.offsetWidth / cardWidth) || 1;
-            // Recalculate maxIndex safely
-            if (currentIndex > totalCards - newVisible) {
-                currentIndex = Math.max(0, totalCards - newVisible);
-                updateCarouselPosition();
-            }
-        });
-
-        // Initialize Carousel Auto-play loop
-        startAutoPlay();
     </script>
 </body>
 </html>
