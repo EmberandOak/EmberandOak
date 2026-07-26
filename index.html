@@ -1,1 +1,850 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ember & Oak — Architectural Living</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f0e0d;
+            --surface-color: #171614;
+            --text-primary: #f5f4f0;
+            --text-secondary: #9e9b96;
+            --accent: #c5a880;
+            --border: rgba(245, 244, 240, 0.1);
+            --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+        }
+
+        /* --- V-STYLE NAVIGATION --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            background: linear-gradient(to bottom, rgba(15,14,13,0.8) 0%, rgba(15,14,13,0) 100%);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            transition: background 0.4s var(--transition-smooth), padding 0.4s var(--transition-smooth);
+        }
+
+        header.scrolled {
+            background: rgba(15, 14, 13, 0.95);
+            padding: 16px 48px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            text-decoration: none;
+            z-index: 1010;
+        }
+
+        .nav-triggers {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-trigger-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 8px 0;
+            position: relative;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-trigger-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--text-primary);
+            transition: width 0.3s var(--transition-smooth);
+        }
+
+        .nav-trigger-btn:hover, .nav-trigger-btn.active {
+            opacity: 1;
+        }
+
+        .nav-trigger-btn:hover::after, .nav-trigger-btn.active::after {
+            width: 100%;
+        }
+
+        /* Fullscreen Megamenu Overlay (Vitra Style) */
+        .megamenu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--surface-color);
+            z-index: 1005;
+            display: flex;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s var(--transition-smooth);
+            padding-top: 100px;
+        }
+
+        .megamenu-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .megamenu-content {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 60px 80px;
+            grid-template-columns: 1fr 2fr;
+            gap: 80px;
+            animation: fadeInMenu 0.5s var(--transition-smooth) forwards;
+        }
+
+        .megamenu-content.active-panel {
+            display: grid;
+        }
+
+        @keyframes fadeInMenu {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .menu-col-left h3 {
+            font-size: 2.5rem;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            letter-spacing: -0.01em;
+        }
+
+        .menu-col-left p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 400px;
+        }
+
+        .menu-links-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .menu-links-list li a {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease, padding-left 0.3s ease;
+        }
+
+        .menu-links-list li a:hover {
+            color: var(--text-primary);
+            padding-left: 12px;
+        }
+
+        .menu-close {
+            position: absolute;
+            top: 36px;
+            right: 48px;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 8px 16px;
+            z-index: 1015;
+        }
+
+        /* --- HERO VIDEO BANNER --- */
+        .hero-banner {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: flex-end;
+            padding: 80px;
+            overflow: hidden;
+        }
+
+        .hero-banner video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            z-index: 1;
+            filter: brightness(0.65);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(15,14,13,0.9) 0%, rgba(15,14,13,0.2) 60%, rgba(15,14,13,0.4) 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 800px;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+
+        .hero-content p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            max-width: 550px;
+            line-height: 1.5;
+        }
+
+        /* --- BRAND HISTORY SECTION --- */
+        .brand-history {
+            padding: 160px 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 120px;
+            align-items: center;
+        }
+
+        .history-text h2 {
+            font-size: clamp(2.2rem, 4vw, 3.5rem);
+            line-height: 1.2;
+            margin-bottom: 32px;
+            letter-spacing: -0.01em;
+        }
+
+        .history-text p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 24px;
+            font-weight: 300;
+        }
+
+        .history-image-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .history-img {
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+            filter: grayscale(20%);
+            transition: filter 0.5s ease, transform 0.5s var(--transition-smooth);
+        }
+
+        .history-img:hover {
+            filter: grayscale(0%);
+            transform: scale(1.02);
+        }
+
+        .history-img:nth-child(2) {
+            margin-top: 60px;
+        }
+
+        /* --- COLLECTION SLIDER CAROUSEL --- */
+        .collection-section {
+            padding: 100px 0 160px 0;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 0 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            letter-spacing: -0.01em;
+        }
+
+        .carousel-controls {
+            display: flex;
+            gap: 16px;
+        }
+
+        .carousel-btn {
+            background: var(--surface-color);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .carousel-btn:hover {
+            background: var(--text-primary);
+            color: var(--bg-color);
+            border-color: var(--text-primary);
+        }
+
+        /* Carousel Track Structure */
+        .carousel-viewport {
+            width: 100%;
+            overflow: hidden;
+            padding-left: 80px;
+            cursor: grab;
+        }
+
+        .carousel-viewport:active {
+            cursor: grabbing;
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 40px;
+            transition: transform 0.6s var(--transition-smooth);
+            will-change: transform;
+        }
+
+        .product-card {
+            min-width: 420px;
+            background: var(--surface-color);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            flex-shrink: 0;
+            transition: border-color 0.3s ease;
+        }
+
+        .product-card:hover {
+            border-color: rgba(245, 244, 240, 0.3);
+        }
+
+        .product-image-container {
+            width: 100%;
+            height: 480px;
+            overflow: hidden;
+            position: relative;
+            background-color: #121110;
+        }
+
+        .product-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s var(--transition-smooth);
+        }
+
+        .product-card:hover .product-image-container img {
+            transform: scale(1.05);
+        }
+
+        .product-details {
+            padding: 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex-grow: 1;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .product-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            letter-spacing: -0.01em;
+        }
+
+        .product-price {
+            font-size: 1.1rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .product-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--surface-color);
+        }
+
+        footer p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-nav {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .footer-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-nav a:hover {
+            color: var(--text-primary);
+        }
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 1024px) {
+            header, .hero-banner, .brand-history, .section-header, footer {
+                padding-left: 40px;
+                padding-right: 40px;
+            }
+            .brand-history {
+                grid-template-columns: 1fr;
+                gap: 60px;
+                padding-top: 100px;
+                padding-bottom: 100px;
+            }
+            .megamenu-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding: 40px;
+            }
+            .carousel-viewport {
+                padding-left: 40px;
+            }
+            .product-card {
+                min-width: 360px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 20px 24px;
+            }
+            .hero-banner {
+                padding: 24px;
+                align-items: center;
+                text-align: center;
+            }
+            .hero-content {
+                max-width: 100%;
+            }
+            .hero-content p {
+                margin: 0 auto;
+            }
+            .nav-triggers {
+                gap: 20px;
+            }
+            .product-card {
+                min-width: 300px;
+            }
+            .carousel-viewport {
+                padding-left: 24px;
+            }
+            .section-header {
+                padding: 0 24px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 24px;
+            }
+            footer {
+                flex-direction: column;
+                gap: 32px;
+                text-align: center;
+                padding: 60px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- V-Style Navigation Header -->
+    <header id="site-header">
+        <a href="#" class="brand-logo">Ember & Oak</a>
+        <nav class="nav-triggers">
+            <button class="nav-trigger-btn" data-target="menu-collections">Collections</button>
+            <button class="nav-trigger-btn" data-target="menu-story">The Brand</button>
+            <button class="nav-trigger-btn" data-target="menu-contact">Inquiries</button>
+        </nav>
+    </header>
+
+    <!-- Fullscreen Architectural Megamenu Overlay -->
+    <div class="megamenu-overlay" id="megamenu-overlay">
+        <button class="menu-close" id="menu-close-btn">Close [X]</button>
+        
+        <!-- Panel 1: Collections -->
+        <div class="megamenu-content" id="menu-collections">
+            <div class="menu-col-left">
+                <h3>Curated Living Spaces</h3>
+                <p>Explore our master series. Each piece is meticulously forged from rare hardwoods and brushed raw metals, designed to anchor modern spatial architecture.</p>
+            </div>
+            <div>
+                <ul class="menu-links-list">
+                    <li><a href="#collection-slider">The monolithic Series</a></li>
+                    <li><a href="#collection-slider">Brutalist Seating</a></li>
+                    <li><a href="#collection-slider">Architectural Lighting</a></li>
+                    <li><a href="#collection-slider">Raw Oak Credenzas</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Panel 2: The Brand -->
+        <div class="megamenu-content" id="menu-story">
+            <div class="menu-col-left">
+                <h3>Materiality & Heritage</h3>
+                <p>We craft uncompromised furniture that respects the raw state of nature. Discover our philosophy on sustainable sourcing and structural purity.</p>
+            </div>
+            <div>
+                <ul class="menu-links-list">
+                    <li><a href="#history-section">Our Philosophy</a></li>
+                    <li><a href="#history-section">The Artisan Guild</a></li>
+                    <li><a href="#history-section">Sustainable Timber</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Panel 3: Inquiries -->
+        <div class="megamenu-content" id="menu-contact">
+            <div class="menu-col-left">
+                <h3>Global Inquiries</h3>
+                <p>As an introductory design house, we connect clients directly with our master showrooms, interior architects, and global stockists.</p>
+            </div>
+            <div>
+                <ul class="menu-links-list">
+                    <li><a href="mailto:concierge@emberandoak.com">Concierge Email</a></li>
+                    <li><a href="#">Showroom Locations</a></li>
+                    <li><a href="#">Press & Editorial</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Video Banner Section -->
+    <section class="hero-banner">
+        <video autoplay muted loop playsinline>
+            <!-- Using a reliable high-end architectural interior design cinematic background sample -->
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-luxury-modern-living-room-interior-design-41619-large.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Sculpted by Nature, Finished by Hand</h1>
+            <p>Ember & Oak presents a radical synthesis of industrial materiality and organic warmth. Architectural furnishings designed for contemporary spaces.</p>
+        </div>
+    </section>
+
+    <!-- Brand History Section -->
+    <section class="brand-history" id="history-section">
+        <div class="history-text">
+            <h2>Rooted in structural honesty and material depth.</h2>
+            <p>Founded on the principle that furniture should serve as foundational architecture rather than temporary decor, Ember & Oak explores the tension between blackened steel and deeply grained organic wood.</p>
+            <p>Every silhouette is deliberately restrained. We reject excess ornamentation, allowing the native character, knots, and grain patterns of sustainable timber to dictate the personality of each creation.</p>
+        </div>
+        <div class="history-image-grid">
+            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80" alt="Interior craftsmanship" class="history-img">
+            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80" alt="Minimalist wooden furniture" class="history-img">
+        </div>
+    </section>
+
+    <!-- Collection Slider Carousel Section -->
+    <section class="collection-section" id="collection-slider">
+        <div class="section-header">
+            <h2>Current Collections</h2>
+            <div class="carousel-controls">
+                <button class="carousel-btn" id="prev-btn" aria-label="Previous slide">&#8592;</button>
+                <button class="carousel-btn" id="next-btn" aria-label="Next slide">&#8594;</button>
+            </div>
+        </div>
+
+        <div class="carousel-viewport" id="carousel-viewport">
+            <div class="carousel-track" id="carousel-track">
+                
+                <!-- Product 1 -->
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80" alt="The Monolith Sofa">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-meta">
+                            <h3 class="product-title">The Monolith Sofa</h3>
+                            <span class="product-price">$4,850</span>
+                        </div>
+                        <p class="product-desc">Low-profile modular seating wrapped in heavy charcoal wool-blend upholstery, anchored by an exposed charred oak internal frame.</p>
+                    </div>
+                </article>
+
+                <!-- Product 2 -->
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1533779283484-8ab4940aa78f?auto=format&fit=crop&w=1000&q=80" alt="Aethel Table">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-meta">
+                            <h3 class="product-title">Aethel Dining Table</h3>
+                            <span class="product-price">$6,200</span>
+                        </div>
+                        <p class="product-desc">Solid European white oak slab featuring hand-charred edges, supported by geometric matte-black architectural steel legs.</p>
+                    </div>
+                </article>
+
+                <!-- Product 3 -->
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1000&q=80" alt="Komorebi Lounge Chair">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-meta">
+                            <h3 class="product-title">Komorebi Lounge Chair</h3>
+                            <span class="product-price">$2,400</span>
+                        </div>
+                        <p class="product-desc">An exercise in ergonomic lightness. Form-pressed walnut veneer shell suspended within a fine-gauge welded steel exoskeleton.</p>
+                    </div>
+                </article>
+
+                <!-- Product 4 -->
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1000&q=80" alt="Vesper Credenza">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-meta">
+                            <h3 class="product-title">Vesper Credenza</h3>
+                            <span class="product-price">$3,900</span>
+                        </div>
+                        <p class="product-desc">Fluted architectural cabinetry crafted from smoked ash wood with integrated brushed brass touch-latch hardware systems.</p>
+                    </div>
+                </article>
+
+                <!-- Product 5 -->
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1000&q=80" alt="Silt Pendant Light">
+                    </div>
+                    <div class="product-details">
+                        <div class="product-meta">
+                            <h3 class="product-title">Silt Pendant Light</h3>
+                            <span class="product-price">$1,150</span>
+                        </div>
+                        <p class="product-desc">Hand-spun raw copper shade casting warm downward illumination, hung via a braided textile cord and ceiling canopy.</p>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <a href="#" class="brand-logo" style="font-size: 1.1rem;">Ember & Oak</a>
+        <p>&copy; 2026 Ember & Oak Studio. All rights reserved. Introductory Archive.</p>
+        <ul class="footer-nav">
+            <li><a href="#history-section">Manifesto</a></li>
+            <li><a href="#collection-slider">Index</a></li>
+            <li><a href="mailto:concierge@emberandoak.com">Contact</a></li>
+        </ul>
+    </footer>
+
+    <!-- JavaScript Layer -->
+    <script>
+        /* --- HEADER SCROLL EFFECT --- */
+        const header = document.getElementById('site-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        /* --- VITRA-STYLE MEGAMENU LOGIC --- */
+        const triggerBtns = document.querySelectorAll('.nav-trigger-btn');
+        const overlay = document.getElementById('megamenu-overlay');
+        const closeBtn = document.getElementById('menu-close-btn');
+        const menuPanels = document.querySelectorAll('.megamenu-content');
+
+        triggerBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.getAttribute('data-target');
+                
+                // Clear active states
+                triggerBtns.forEach(b => b.classList.remove('active'));
+                menuPanels.forEach(p => p.classList.remove('active-panel'));
+                
+                // Set current active states
+                btn.classList.add('active');
+                const targetPanel = document.getElementById(targetId);
+                if (targetPanel) {
+                    targetPanel.classList.add('active-panel');
+                }
+                
+                overlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        closeBtn.addEventListener('click', closeModal);
+        
+        // Close on background click inside overlay
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeModal();
+            }
+        });
+
+        function closeModal() {
+            overlay.classList.remove('open');
+            triggerBtns.forEach(b => b.classList.remove('active'));
+            document.body.style.overflow = 'auto';
+        }
+
+        /* --- CAROUSEL WITH AUTO-PLAY & HOVER STOP --- */
+        const viewport = document.getElementById('carousel-viewport');
+        const track = document.getElementById('carousel-track');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        let cardWidth = track.querySelector('.product-card').offsetWidth + 40; // Card width + gap
+        let currentIndex = 0;
+        const totalCards = track.querySelectorAll('.product-card').length;
+        const visibleCards = Math.floor(viewport.offsetWidth / cardWidth) || 1;
+        const maxIndex = Math.max(0, totalCards - visibleCards);
+
+        let autoPlayInterval;
+        const autoPlayDelay = 3500; // Time in ms between slides
+
+        function updateCarouselPosition() {
+            track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+        }
+
+        function nextSlide() {
+            if (currentIndex < maxIndex) {
+                currentIndex++;
+            } else {
+                currentIndex = 0; // Loop back to start
+            }
+            updateCarouselPosition();
+        }
+
+        function prevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = maxIndex; // Loop to end
+            }
+            updateCarouselPosition();
+        }
+
+        // Start Auto-play
+        function startAutoPlay() {
+            autoPlayInterval = setInterval(nextSlide, autoPlayDelay);
+        }
+
+        // Stop Auto-play
+        function stopAutoPlay() {
+            clearInterval(autoPlayInterval);
+        }
+
+        // Event Listeners for Controls
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+        });
+
+        // Hover pause logic requested by user
+        viewport.addEventListener('mouseenter', stopAutoPlay);
+        viewport.addEventListener('mouseleave', startAutoPlay);
+
+        // Window resize adjustment
+        window.addEventListener('resize', () => {
+            cardWidth = track.querySelector('.product-card').offsetWidth + 40;
+            const newVisible = Math.floor(viewport.offsetWidth / cardWidth) || 1;
+            // Recalculate maxIndex safely
+            if (currentIndex > totalCards - newVisible) {
+                currentIndex = Math.max(0, totalCards - newVisible);
+                updateCarouselPosition();
+            }
+        });
+
+        // Initialize Carousel Auto-play loop
+        startAutoPlay();
+    </script>
+</body>
+</html>
