@@ -304,7 +304,7 @@
             margin-top: 60px;
         }
 
-        /* --- INFINITE AUTO-LOOP TICKER SECTION --- */
+        /* --- INFINITE AUTO-LOOP TICKER SECTION (ZERO GAP) --- */
         .collection-section {
             padding: 100px 0 160px 0;
             overflow: hidden;
@@ -320,7 +320,7 @@
             letter-spacing: -0.01em;
         }
 
-        /* Infinite Marquee Track */
+        /* Infinite Marquee Track with gap: 0 */
         .ticker-container {
             width: 100%;
             overflow: hidden;
@@ -330,9 +330,9 @@
 
         .ticker-track {
             display: flex;
-            gap: 40px;
+            gap: 0px;
             width: max-content;
-            animation: infiniteScroll 35s linear infinite;
+            animation: infiniteScroll 40s linear infinite;
         }
 
         .ticker-container:hover .ticker-track {
@@ -344,10 +344,11 @@
                 transform: translateX(0);
             }
             100% {
-                transform: translateX(calc(-50% - 20px));
+                transform: translateX(-50%);
             }
         }
 
+        /* Individual Card Layout */
         .product-card {
             width: 420px;
             background: var(--surface-color);
@@ -361,15 +362,22 @@
 
         .product-card:hover {
             border-color: rgba(245, 244, 240, 0.3);
+            z-index: 10;
         }
 
-        /* Image container scaling on hover */
+        /* Image Container that scales up on hover */
         .product-image-container {
             width: 100%;
             height: 480px;
             overflow: hidden;
             position: relative;
             background-color: #121110;
+            transition: transform 0.5s var(--transition-smooth);
+        }
+
+        .product-card:hover .product-image-container {
+            transform: scale(1.06);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
 
         .product-image-container img {
@@ -380,7 +388,7 @@
             transition: transform 0.6s var(--transition-smooth);
         }
 
-        .product-image-container:hover img {
+        .product-card:hover .product-image-container img {
             transform: scale(1.12);
         }
 
@@ -569,8 +577,9 @@
 
     <!-- Hero Video Banner Section -->
     <section class="hero-banner">
+        <!-- PASTE YOUR VIDEO URL INSIDE THE src="" ATTRIBUTE BELOW -->
         <video autoplay muted loop playsinline>
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-luxury-modern-living-room-interior-design-41619-large.mp4" type="video/mp4">
+            <source src="PASTE_YOUR_VIDEO_URL_HERE.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         <div class="hero-overlay"></div>
@@ -593,7 +602,7 @@
         </div>
     </section>
 
-    <!-- Collection Infinite Auto-Loop Section -->
+    <!-- Collection Infinite Auto-Loop Section (Zero Gap) -->
     <section class="collection-section" id="collection-ticker">
         <div class="section-header">
             <h2>Current Collections</h2>
