@@ -109,6 +109,21 @@
             width: 100%;
         }
 
+        /* --- Mobile Menu Toggle (hidden on desktop) --- */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 8px 0;
+            z-index: 1010;
+        }
+
         /* Fullscreen Megamenu Overlay */
         .megamenu-overlay {
             position: fixed;
@@ -138,6 +153,7 @@
             grid-template-columns: 1fr 2fr;
             gap: 80px;
             animation: fadeInMenu 0.5s var(--transition-smooth) forwards;
+            overflow-y: auto;
         }
 
         .megamenu-content.active-panel {
@@ -204,6 +220,7 @@
             position: relative;
             width: 100vw;
             height: 100vh;
+            height: 100dvh;
             display: flex;
             align-items: flex-end;
             padding: 80px;
@@ -525,6 +542,51 @@
             header {
                 padding: 20px 24px;
             }
+
+            header.scrolled {
+                padding: 14px 24px;
+            }
+
+            /* Mobile nav: hide inline row, show toggle */
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .nav-triggers {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                flex-direction: column;
+                justify-content: flex-start;
+                background-color: var(--surface-color);
+                padding: 110px 24px 40px 24px;
+                gap: 4px;
+                max-height: 0;
+                opacity: 0;
+                overflow: hidden;
+                pointer-events: none;
+                transition: max-height 0.5s var(--transition-smooth), opacity 0.3s ease;
+                z-index: 1001;
+            }
+
+            .nav-triggers.mobile-open {
+                max-height: 100vh;
+                max-height: 100dvh;
+                opacity: 1;
+                pointer-events: auto;
+                overflow-y: auto;
+            }
+
+            .nav-trigger-btn {
+                width: 100%;
+                text-align: left;
+                font-size: 1.1rem;
+                padding: 18px 0;
+                border-bottom: 1px solid var(--border);
+            }
+
             .hero-banner {
                 padding: 24px;
                 align-items: center;
@@ -536,11 +598,11 @@
             .hero-content p {
                 margin: 0 auto;
             }
-            .nav-triggers {
-                gap: 20px;
-            }
             .product-card {
                 width: 300px;
+            }
+            .product-image-container {
+                height: 400px;
             }
             .section-header, .prefooter-video-section {
                 padding-left: 24px;
@@ -562,6 +624,73 @@
                 left: 24px;
                 right: 24px;
             }
+            .prefooter-video-caption h3 {
+                font-size: 1.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand-logo {
+                font-size: 1.05rem;
+                letter-spacing: 0.1em;
+            }
+
+            .hero-content h1 {
+                font-size: 2.15rem;
+            }
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .history-image-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .history-img {
+                height: 280px;
+            }
+            .history-img:nth-child(2) {
+                margin-top: 0;
+            }
+
+            .product-card {
+                width: 250px;
+            }
+            .product-image-container {
+                height: 320px;
+            }
+
+            .prefooter-video-caption h3 {
+                font-size: 1.4rem;
+            }
+            .prefooter-video-caption span {
+                font-size: 0.72rem;
+            }
+
+            .megamenu-content {
+                padding: 24px;
+                gap: 28px;
+            }
+            .menu-col-left h3 {
+                font-size: 1.75rem;
+            }
+            .menu-col-left p {
+                font-size: 0.9rem;
+            }
+            .menu-links-list {
+                gap: 14px;
+            }
+            .menu-links-list li a {
+                font-size: 1.4rem;
+            }
+            .menu-close {
+                top: 20px;
+                right: 24px;
+            }
+
+            .footer-heading {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -575,6 +704,7 @@
             <button class="nav-trigger-btn" data-target="menu-story">The Brand</button>
             <button class="nav-trigger-btn" data-target="menu-contact">Inquiries</button>
         </nav>
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle">Menu</button>
     </header>
 
     <!-- Fullscreen Architectural Megamenu Overlay -->
@@ -631,7 +761,7 @@
     <!-- Hero Video Banner Section -->
     <section class="hero-banner">
         <video autoplay muted loop playsinline>
-            <source src="https://cdn.shopify.com/videos/c/o/v/05b6a2946d7d4ca6915d1aa3455de114.mp4" type="video/mp4">
+            <source src="14741613_3840_2160_25fps.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         <div class="hero-overlay"></div>
@@ -777,7 +907,7 @@
     <section class="prefooter-video-section">
         <div class="prefooter-video-container">
             <video autoplay muted loop playsinline>
-                <source src="14741613_3840_2160_25fps.mp4" type="video/mp4">
+                <source src="https://cdn.shopify.com/videos/c/o/v/05b6a2946d7d4ca6915d1aa3455de114.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
             <div class="prefooter-video-caption">
@@ -862,6 +992,16 @@
             }
         });
 
+        /* --- MOBILE MENU TOGGLE --- */
+        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        const navTriggersEl = document.querySelector('.nav-triggers');
+
+        mobileToggle.addEventListener('click', () => {
+            const isOpen = navTriggersEl.classList.toggle('mobile-open');
+            mobileToggle.textContent = isOpen ? 'Close [X]' : 'Menu';
+            document.body.style.overflow = isOpen ? 'hidden' : 'auto';
+        });
+
         /* --- VITRA-STYLE MEGAMENU LOGIC --- */
         const triggerBtns = document.querySelectorAll('.nav-trigger-btn');
         const overlay = document.getElementById('megamenu-overlay');
@@ -870,6 +1010,10 @@
 
         triggerBtns.forEach(btn => {
             btn.addEventListener('click', () => {
+                // Close the mobile dropdown first, so it doesn't sit behind the fullscreen overlay
+                navTriggersEl.classList.remove('mobile-open');
+                mobileToggle.textContent = 'Menu';
+
                 const targetId = btn.getAttribute('data-target');
                 
                 triggerBtns.forEach(b => b.classList.remove('active'));
