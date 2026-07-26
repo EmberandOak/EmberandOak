@@ -304,7 +304,7 @@
             margin-top: 60px;
         }
 
-        /* --- INFINITE AUTO-LOOP TICKER SECTION --- */
+        /* --- INFINITE AUTO-LOOP TICKER SECTION (0px Gap, Image-Only) --- */
         .collection-section {
             padding: 100px 0 160px 0;
             overflow: hidden;
@@ -329,7 +329,7 @@
 
         .ticker-track {
             display: flex;
-            gap: 0px;
+            gap: 0px; /* 0mm space between autoloop slides */
             width: max-content;
             animation: infiniteScroll 40s linear infinite;
         }
@@ -350,31 +350,19 @@
         .product-card {
             width: 420px;
             background: var(--surface-color);
-            border: 1px solid var(--border);
+            border: none;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             flex-shrink: 0;
-            transition: border-color 0.3s ease;
-        }
-
-        .product-card:hover {
-            border-color: rgba(245, 244, 240, 0.3);
-            z-index: 10;
         }
 
         .product-image-container {
             width: 100%;
-            height: 480px;
+            height: 520px;
             overflow: hidden;
             position: relative;
             background-color: #121110;
-            transition: transform 0.5s var(--transition-smooth);
-        }
-
-        .product-card:hover .product-image-container {
-            transform: scale(1.06);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
 
         .product-image-container img {
@@ -386,40 +374,7 @@
         }
 
         .product-card:hover .product-image-container img {
-            transform: scale(1.12);
-        }
-
-        .product-details {
-            padding: 36px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            flex-grow: 1;
-        }
-
-        .product-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-        }
-
-        .product-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.6rem;
-            letter-spacing: -0.01em;
-        }
-
-        .product-price {
-            font-size: 1.1rem;
-            color: var(--accent);
-            font-weight: 500;
-        }
-
-        .product-desc {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            font-weight: 300;
+            transform: scale(1.06);
         }
 
         /* --- PRE-FOOTER VIDEO SHOWCASE SECTION --- */
@@ -699,7 +654,7 @@
         </div>
     </section>
 
-    <!-- Collection Infinite Auto-Loop Section -->
+    <!-- Collection Infinite Auto-Loop Section (Image-Only, 0px spacing) -->
     <section class="collection-section" id="collection-ticker">
         <div class="section-header">
             <h2>Current Collections</h2>
@@ -708,135 +663,109 @@
         <div class="ticker-container">
             <div class="ticker-track" id="ticker-track">
                 
-                <!-- Product Set 1 -->
+                <!-- ======================================================== -->
+                <!-- SET 1: INSERT YOUR 7-8 IMAGE URLS OR FILE PATHS BELOW -->
+                <!-- ======================================================== -->
+
                 <article class="product-card">
                     <div class="product-image-container">
-                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80" alt="The Monolith Sofa">
-                    </div>
-                    <div class="product-details">
-                        <div class="product-meta">
-                            <h3 class="product-title">The Monolith Sofa</h3>
-                            <span class="product-price">$4,850</span>
-                        </div>
-                        <p class="product-desc">Low-profile modular seating wrapped in heavy charcoal wool-blend upholstery, anchored by an exposed charred oak internal frame.</p>
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-rebornfilmes-29887342.jpg?v=1785097790" alt="Collection Image 1">
                     </div>
                 </article>
 
                 <article class="product-card">
                     <div class="product-image-container">
-                        <img src="https://images.unsplash.com/photo-1530018607912-eff2daa1bac4?auto=format&fit=crop&w=1000&q=80" alt="Aethel Table">
-                    </div>
-                    <div class="product-details">
-                        <div class="product-meta">
-                            <h3 class="product-title">Aethel Dining Table</h3>
-                            <span class="product-price">$6,200</span>
-                        </div>
-                        <p class="product-desc">Solid European white oak slab featuring hand-charred edges, supported by geometric matte-black architectural steel legs.</p>
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-wolfart-37914509.jpg?v=1785097789" alt="Collection Image 2">
                     </div>
                 </article>
 
                 <article class="product-card">
                     <div class="product-image-container">
-                        <img src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1000&q=80" alt="Komorebi Lounge Chair">
-                    </div>
-                    <div class="product-details">
-                        <div class="product-meta">
-                            <h3 class="product-title">Komorebi Lounge Chair</h3>
-                            <span class="product-price">$2,400</span>
-                        </div>
-                        <p class="product-desc">An exercise in ergonomic lightness. Form-pressed walnut veneer shell suspended within a fine-gauge welded steel exoskeleton.</p>
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-mart-production-7679821_43bf08fc-4e61-4d83-a29a-3ecc527e220d.jpg?v=1785097664" alt="Collection Image 3">
                     </div>
                 </article>
 
                 <article class="product-card">
                     <div class="product-image-container">
-                        <img src="https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1000&q=80" alt="Vesper Credenza">
-                    </div>
-                    <div class="product-details">
-                        <div class="product-meta">
-                            <h3 class="product-title">Vesper Credenza</h3>
-                            <span class="product-price">$3,900</span>
-                        </div>
-                        <p class="product-desc">Fluted architectural cabinetry crafted from smoked ash wood with integrated brushed brass touch-latch hardware systems.</p>
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-sudelermii-245055019-12407364_c7c0b0ca-7428-4fc2-8857-75829fc43925.jpg?v=1785097664" alt="Collection Image 4">
                     </div>
                 </article>
 
                 <article class="product-card">
                     <div class="product-image-container">
-                        <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1000&q=80" alt="Silt Pendant Light">
-                    </div>
-                    <div class="product-details">
-                        <div class="product-meta">
-                            <h3 class="product-title">Silt Pendant Light</h3>
-                            <span class="product-price">$1,150</span>
-                        </div>
-                        <p class="product-desc">Hand-spun raw copper shade casting warm downward illumination, hung via a braided textile cord and ceiling canopy.</p>
-                    </div>
-                </article>
-
-                <!-- Duplicate Product Set 2 for Seamless Infinite Loop -->
-                <article class="product-card">
-                    <div class="product-image-container">
-                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80" alt="The Monolith Sofa">
-                    </div>
-                    <div class="product-details">
-                        <div class="product-meta">
-                            <h3 class="product-title">The Monolith Sofa</h3>
-                            <span class="product-price">$4,850</span>
-                        </div>
-                        <p class="product-desc">Low-profile modular seating wrapped in heavy charcoal wool-blend upholstery, anchored by an exposed charred oak internal frame.</p>
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-m-e-r-v-e-42708268-15998821_b4a7a387-fa11-408d-8877-fd13f845392f.jpg?v=1785097663" alt="Collection Image 5">
                     </div>
                 </article>
 
                 <article class="product-card">
                     <div class="product-image-container">
-                        <img src="https://images.unsplash.com/photo-1530018607912-eff2daa1bac4?auto=format&fit=crop&w=1000&q=80" alt="Aethel Table">
-                    </div>
-                    <div class="product-details">
-                        <div class="product-meta">
-                            <h3 class="product-title">Aethel Dining Table</h3>
-                            <span class="product-price">$6,200</span>
-                        </div>
-                        <p class="product-desc">Solid European white oak slab featuring hand-charred edges, supported by geometric matte-black architectural steel legs.</p>
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-kseniachernaya-5806984_148793a4-455d-4ac7-b955-efa7df0de745.jpg?v=1785097663" alt="Collection Image 6">
                     </div>
                 </article>
 
                 <article class="product-card">
                     <div class="product-image-container">
-                        <img src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1000&q=80" alt="Komorebi Lounge Chair">
-                    </div>
-                    <div class="product-details">
-                        <div class="product-meta">
-                            <h3 class="product-title">Komorebi Lounge Chair</h3>
-                            <span class="product-price">$2,400</span>
-                        </div>
-                        <p class="product-desc">An exercise in ergonomic lightness. Form-pressed walnut veneer shell suspended within a fine-gauge welded steel exoskeleton.</p>
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-darya-grey_owl-132130036-16763513.jpg?v=1785097662" alt="Collection Image 7">
                     </div>
                 </article>
 
                 <article class="product-card">
                     <div class="product-image-container">
-                        <img src="https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1000&q=80" alt="Vesper Credenza">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-osicooked-33937074_5c5f3b7d-a01e-4440-a92d-87e15ebf1879.jpg?v=1785097662" alt="Collection Image 8">
                     </div>
-                    <div class="product-details">
-                        <div class="product-meta">
-                            <h3 class="product-title">Vesper Credenza</h3>
-                            <span class="product-price">$3,900</span>
-                        </div>
-                        <p class="product-desc">Fluted architectural cabinetry crafted from smoked ash wood with integrated brushed brass touch-latch hardware systems.</p>
+                </article>
+
+
+                <!-- ======================================================== -->
+                <!-- SET 2: DUPLICATE COPIES FOR SEAMLESS INFINITE LOOPING    -->
+                <!-- (Make sure these match your 8 images above)             -->
+                <!-- ======================================================== -->
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-rebornfilmes-29887342.jpg?v=1785097790" alt="Collection Image 1">
                     </div>
                 </article>
 
                 <article class="product-card">
                     <div class="product-image-container">
-                        <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1000&q=80" alt="Silt Pendant Light">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-wolfart-37914509.jpg?v=1785097789" alt="Collection Image 2">
                     </div>
-                    <div class="product-details">
-                        <div class="product-meta">
-                            <h3 class="product-title">Silt Pendant Light</h3>
-                            <span class="product-price">$1,150</span>
-                        </div>
-                        <p class="product-desc">Hand-spun raw copper shade casting warm downward illumination, hung via a braided textile cord and ceiling canopy.</p>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-mart-production-7679821_43bf08fc-4e61-4d83-a29a-3ecc527e220d.jpg?v=1785097664" alt="Collection Image 3">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-sudelermii-245055019-12407364_c7c0b0ca-7428-4fc2-8857-75829fc43925.jpg?v=1785097664" alt="Collection Image 4">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-m-e-r-v-e-42708268-15998821_b4a7a387-fa11-408d-8877-fd13f845392f.jpg?v=1785097663" alt="Collection Image 5">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-kseniachernaya-5806984_148793a4-455d-4ac7-b955-efa7df0de745.jpg?v=1785097663" alt="Collection Image 6">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-darya-grey_owl-132130036-16763513.jpg?v=1785097662" alt="Collection Image 7">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-osicooked-33937074_5c5f3b7d-a01e-4440-a92d-87e15ebf1879.jpg?v=1785097662" alt="Collection Image 8">
                     </div>
                 </article>
 
@@ -844,12 +773,11 @@
         </div>
     </section>
 
-    <!-- NEW PRE-FOOTER VIDEO SECTION (Insert your video URL below) -->
+    <!-- Pre-Footer Video Section -->
     <section class="prefooter-video-section">
         <div class="prefooter-video-container">
-            <!-- REPLACE THE 'src' URL BELOW WITH YOUR VIDEO FILE PATH OR LINK -->
             <video autoplay muted loop playsinline>
-                <source src="https://cdn.shopify.com/videos/c/o/v/8af3477fffd64e70a9eb162018f8bd5e.mp4" type="video/mp4">
+                <source src="https://cdn.shopify.com/videos/c/o/v/05b6a2946d7d4ca6915d1aa3455de114.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
             <div class="prefooter-video-caption">
