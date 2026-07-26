@@ -227,17 +227,22 @@
             overflow: hidden;
         }
 
+        .hero-media {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
         .hero-banner video {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 100%;
-        height: 100%;
-        transform: translate(-50%, -50%);
-        object-fit: contain;
-        z-index: 1;
-        filter: brightness(0.65);
-       }
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%);
+            object-fit: contain;
+            filter: brightness(0.65);
+        }
 
         .hero-overlay {
             position: absolute;
@@ -279,19 +284,19 @@
             grid-template-columns: 1fr 1fr;
             gap: 120px;
             align-items: center;
-    
-}
-
+            background-color: #ffffff;
+        }
 
         .history-text h2 {
             font-size: clamp(2.2rem, 4vw, 3.5rem);
             line-height: 1.2;
             margin-bottom: 32px;
             letter-spacing: -0.01em;
+            color: #0f0e0d;
         }
 
         .history-text p {
-            color: var(--text-secondary);
+            color: #4a4744;
             font-size: 1.05rem;
             line-height: 1.8;
             margin-bottom: 24px;
@@ -588,12 +593,25 @@
             }
 
             .hero-banner {
-                padding: 24px;
-                align-items: center;
+                flex-direction: column;
+                align-items: stretch;
                 text-align: center;
+                height: auto;
+                padding: 0 0 48px 0;
+            }
+            .hero-media {
+                position: relative;
+                inset: auto;
+                width: 100%;
+                aspect-ratio: 16 / 9;
+                overflow: hidden;
+                z-index: auto;
             }
             .hero-content {
+                position: relative;
+                z-index: 2;
                 max-width: 100%;
+                padding: 32px 24px 0 24px;
             }
             .hero-content p {
                 margin: 0 auto;
@@ -760,11 +778,13 @@
 
     <!-- Hero Video Banner Section -->
     <section class="hero-banner">
-        <video autoplay muted loop playsinline>
-            <source src="14741613_3840_2160_25fps.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        <div class="hero-overlay"></div>
+        <div class="hero-media">
+            <video autoplay muted loop playsinline>
+                <source src="14741613_3840_2160_25fps.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="hero-overlay"></div>
+        </div>
         <div class="hero-content">
             <h1>Sculpted by Nature, Finished by Hand</h1>
             <p>Ember and Oak presents a radical synthesis of industrial materiality and organic warmth. Architectural furnishings designed for contemporary spaces.</p>
