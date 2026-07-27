@@ -169,11 +169,11 @@
             width: 100%;
             height: 100vh;
             display: flex;
-            align-items: flex-end; /* Align content to the bottom */
-            justify-content: flex-start; /* Align content to the left */
-            text-align: left; /* Left-align the text */
+            align-items: flex-end;
+            justify-content: flex-start;
+            text-align: left;
             overflow: hidden;
-            padding: 60px 48px; /* Padding for bottom-left placement */
+            padding: 60px 48px;
         }
 
         .hero-media {
@@ -212,6 +212,10 @@
             letter-spacing: -0.03em;
             margin-bottom: 16px;
             color: #fff;
+        }
+
+        .hero-content h1 .break-line {
+            display: block;
         }
 
         .hero-content p {
@@ -653,7 +657,7 @@
             <div class="hero-overlay"></div>
         </div>
         <div class="hero-content">
-            <h1>Sculpted by Nature, Finished by Hand</h1>
+            <h1>Sculpted by Nature,<span class="break-line">Finished by Hand</span></h1>
             <p>Ember and Oak presents a radical synthesis of industrial materiality and organic warmth. Architectural furnishings designed for contemporary spaces.</p>
         </div>
     </section>
