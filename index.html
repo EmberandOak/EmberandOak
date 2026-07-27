@@ -7,8 +7,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-    <!-- Google Model Viewer for AR Integration -->
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <style>
         :root {
             --bg-color: #0f0e0d;
@@ -34,25 +32,12 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- STUDIO LIGHTING MOUSE GLOW --- */
-        #studio-glow {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 1;
-            background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(197, 168, 128, 0.06), transparent 60%);
-            transition: opacity 0.3s ease;
-        }
-
         h1, h2, h3, .serif-font {
             font-family: 'Playfair Display', serif;
             font-weight: 400;
         }
 
-        /* --- NAVIGATION --- */
+        /* --- V-STYLE NAVIGATION --- */
         header {
             position: fixed;
             top: 0;
@@ -85,337 +70,939 @@
             z-index: 1010;
         }
 
-        .menu-btn {
+        .nav-triggers {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-trigger-btn {
             background: none;
             border: none;
             color: var(--text-primary);
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.9rem;
-            letter-spacing: 0.2em;
+            font-size: 0.85rem;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             cursor: pointer;
-            padding: 8px 16px;
-            border: 1px solid var(--border);
-            border-radius: 30px;
-            transition: all 0.3s ease;
-            z-index: 1010;
-        }
-
-        .menu-btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        /* --- HERO SECTION --- */
-        .hero {
+            padding: 8px 0;
             position: relative;
-            height: 100vh;
-            display: flex;
-            align-items: flex-end;
-            padding: 80px 48px;
-            background-image: linear-gradient(to top, rgba(15,14,13,0.9), rgba(15,14,13,0.3)), url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=2000&q=80');
-            background-size: cover;
-            background-position: center;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
         }
 
-        .hero-content {
-            max-width: 800px;
-            z-index: 2;
-        }
-
-        .hero-content h1 {
-            font-size.clamp: 2.5rem;
-            font-size: clamp(2.5rem, 5vw, 5rem);
-            line-height: 1.1;
-            margin-bottom: 24px;
-            letter-spacing: -0.02em;
-        }
-
-        .hero-content p {
-            font-size: 1.15rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            max-width: 600px;
-        }
-
-        /* --- INNOVATIVE STAGGERED & ASYMMETRICAL GRID COLLECTIONS --- */
-        .collections-section {
-            padding: 120px 48px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .section-header {
-            margin-bottom: 60px;
-        }
-
-        .section-header h2 {
-            font-size: 3rem;
-            letter-spacing: -0.01em;
-            margin-bottom: 12px;
-        }
-
-        .section-header p {
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-        }
-
-        .asymmetrical-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 24px;
-        }
-
-        .collection-card {
-            position: relative;
-            background: var(--surface-color);
-            border-radius: 4px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            transition: transform 0.5s var(--transition-smooth), border-color 0.3s ease;
-        }
-
-        .collection-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
-        }
-
-        .collection-card.col-span-7 { grid-column: span 7; }
-        .collection-card.col-span-5 { grid-column: span 5; }
-        .collection-card.col-span-4 { grid-column: span 4; }
-        .collection-card.col-span-8 { grid-column: span 8; }
-
-        .collection-card img {
-            width: 100%;
-            height: 480px;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.8s var(--transition-smooth);
-        }
-
-        .collection-card.tall img {
-            height: 620px;
-        }
-
-        .collection-card:hover img {
-            transform: scale(1.03);
-        }
-
-        .card-info {
+        .nav-trigger-btn::after {
+            content: '';
             position: absolute;
             bottom: 0;
             left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--text-primary);
+            transition: width 0.3s var(--transition-smooth);
+        }
+
+        .nav-trigger-btn:hover, .nav-trigger-btn.active {
+            opacity: 1;
+        }
+
+        .nav-trigger-btn:hover::after, .nav-trigger-btn.active::after {
             width: 100%;
-            padding: 32px;
-            background: linear-gradient(to top, rgba(15,14,13,0.95) 0%, transparent 100%);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
         }
 
-        .card-info h3 {
-            font-size: 1.5rem;
-            margin-bottom: 6px;
-        }
-
-        .card-info span {
-            font-size: 0.85rem;
-            color: var(--accent);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-
-        /* --- AR QUICK LOOK INTERACTIVE TRIGGER --- */
-        .ar-trigger-btn {
-            background: rgba(15, 14, 13, 0.85);
+        /* --- Mobile Menu Toggle (hidden on desktop) --- */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
             color: var(--text-primary);
-            border: 1px solid var(--accent);
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            letter-spacing: 0.15em;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             cursor: pointer;
-            backdrop-filter: blur(8px);
-            transition: background 0.3s ease, color 0.3s ease;
+            padding: 8px 0;
+            z-index: 1010;
         }
 
-        .ar-trigger-btn:hover {
-            background: var(--accent);
-            color: var(--bg-color);
-        }
-
-        /* --- AR MODAL OVERLAY --- */
-        #ar-modal {
+        /* Fullscreen Megamenu Overlay */
+        .megamenu-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(15, 14, 13, 0.95);
-            z-index: 2000;
+            background-color: var(--surface-color);
+            z-index: 1005;
             display: flex;
-            justify-content: center;
-            align-items: center;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.5s var(--transition-smooth);
+            padding-top: 100px;
         }
 
-        #ar-modal.active {
+        .megamenu-overlay.open {
             opacity: 1;
             pointer-events: auto;
         }
 
-        model-viewer {
-            width: 80vw;
-            height: 80vh;
-            background-color: var(--surface-color);
-            border-radius: 12px;
+        .megamenu-content {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 60px 80px;
+            grid-template-columns: 1fr 2fr;
+            gap: 80px;
+            animation: fadeInMenu 0.5s var(--transition-smooth) forwards;
+            overflow-y: auto;
         }
 
-        .close-ar {
+        .megamenu-content.active-panel {
+            display: grid;
+        }
+
+        @keyframes fadeInMenu {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .menu-col-left h3 {
+            font-size: 2.5rem;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            letter-spacing: -0.01em;
+        }
+
+        .menu-col-left p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 400px;
+        }
+
+        .menu-links-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .menu-links-list li a {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease, padding-left 0.3s ease;
+        }
+
+        .menu-links-list li a:hover {
+            color: var(--text-primary);
+            padding-left: 12px;
+        }
+
+        .menu-close {
             position: absolute;
-            top: 40px;
+            top: 36px;
             right: 48px;
             background: none;
-            border: 1px solid var(--border);
+            border: none;
             color: var(--text-primary);
-            padding: 12px 24px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 1rem;
             letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 8px 16px;
+            z-index: 1015;
         }
 
-        /* --- FOOTER --- */
+        /* --- HERO VIDEO BANNER --- */
+        .hero-banner {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            align-items: flex-end;
+            padding: 80px;
+            overflow: hidden;
+        }
+
+        .hero-media {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        .hero-banner video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%);
+            object-fit: contain;
+            filter: brightness(0.65);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(15,14,13,0.9) 0%, rgba(15,14,13,0.2) 60%, rgba(15,14,13,0.4) 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 800px;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+
+        .hero-content p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            max-width: 550px;
+            line-height: 1.5;
+        }
+
+        /* --- BRAND HISTORY SECTION --- */
+        .brand-history {
+            padding: 160px 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 120px;
+            align-items: center;
+          
+        }
+
+        .history-text h2 {
+            font-size: clamp(2.2rem, 4vw, 3.5rem);
+            line-height: 1.2;
+            margin-bottom: 32px;
+            letter-spacing: -0.01em;
+            
+        }
+
+        .history-text p {
+          
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 24px;
+            font-weight: 300;
+        }
+
+        .history-image-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .history-img {
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+            filter: grayscale(20%);
+            transition: filter 0.5s ease, transform 0.5s var(--transition-smooth);
+        }
+
+        .history-img:hover {
+            filter: grayscale(0%);
+            transform: scale(1.02);
+        }
+
+        .history-img:nth-child(2) {
+            margin-top: 60px;
+        }
+
+        /* --- INFINITE AUTO-LOOP TICKER SECTION (0px Gap, Image-Only) --- */
+        .collection-section {
+            padding: 100px 0 160px 0;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 0 80px;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            letter-spacing: -0.01em;
+        }
+
+        .ticker-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+        }
+
+        .ticker-track {
+            display: flex;
+            gap: 0px; /* 0mm space between autoloop slides */
+            width: max-content;
+            animation: infiniteScroll 40s linear infinite;
+        }
+
+        .ticker-container:hover .ticker-track {
+            animation-play-state: paused;
+        }
+
+        @keyframes infiniteScroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .product-card {
+            width: 420px;
+            background: var(--surface-color);
+            border: none;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .product-image-container {
+            width: 100%;
+            height: 520px;
+            overflow: hidden;
+            position: relative;
+            background-color: #121110;
+        }
+
+        .product-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1);
+            transition: transform 0.6s var(--transition-smooth);
+        }
+
+        .product-card:hover .product-image-container img {
+            transform: scale(1.06);
+        }
+
+        /* --- PRE-FOOTER VIDEO SHOWCASE SECTION --- */
+        .prefooter-video-section {
+            width: 100%;
+            padding: 80px 80px 120px 80px;
+            background-color: var(--bg-color);
+        }
+
+        .prefooter-video-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            width: 100%;
+            height: 650px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background-color: var(--surface-color);
+        }
+
+        .prefooter-video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.8);
+        }
+
+        .prefooter-video-caption {
+            position: absolute;
+            bottom: 48px;
+            left: 48px;
+            z-index: 2;
+            max-width: 500px;
+        }
+
+        .prefooter-video-caption span {
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent);
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .prefooter-video-caption h3 {
+            font-size: 2.2rem;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+
+        /* --- VITRA-STYLE STRUCTURED FOOTER --- */
         footer {
-            padding: 80px 48px;
+            border-top: 1px solid var(--border);
+            background-color: var(--surface-color);
+            padding: 80px 80px 40px 80px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-heading {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 0px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .footer-links-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-links-list li a {
+            display: block;
+            text-align: center;
+            padding: 16px 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-decoration: none;
+            border-bottom: 1px solid var(--border);
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .footer-links-list li a:hover {
+            color: var(--text-primary);
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .footer-bottom-bar {
+            max-width: 1400px;
+            margin: 60px auto 0 auto;
+            padding-top: 30px;
             border-top: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: var(--text-secondary);
-            font-size: 0.9rem;
-            position: relative;
-            z-index: 2;
+            font-size: 0.85rem;
         }
 
-        @media(max-width: 968px) {
-            .asymmetrical-grid {
-                display: flex;
-                flex-direction: column;
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 1024px) {
+            header, .hero-banner, .brand-history, .section-header, .prefooter-video-section, footer {
+                padding-left: 40px;
+                padding-right: 40px;
             }
-            .collection-card img, .collection-card.tall img {
-                height: 360px;
+            .brand-history {
+                grid-template-columns: 1fr;
+                gap: 60px;
+                padding-top: 100px;
+                padding-bottom: 100px;
             }
+            .megamenu-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding: 40px;
+            }
+            .product-card {
+                width: 360px;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .prefooter-video-container {
+                height: 450px;
+            }
+        }
+
+        @media (max-width: 768px) {
             header {
                 padding: 20px 24px;
             }
-            .hero, .collections-section {
+
+            header.scrolled {
+                padding: 14px 24px;
+            }
+
+            /* Mobile nav: hide inline row, show toggle */
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .nav-triggers {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                flex-direction: column;
+                justify-content: flex-start;
+                background-color: var(--surface-color);
+                padding: 110px 24px 40px 24px;
+                gap: 4px;
+                max-height: 0;
+                opacity: 0;
+                overflow: hidden;
+                pointer-events: none;
+                transition: max-height 0.5s var(--transition-smooth), opacity 0.3s ease;
+                z-index: 1001;
+            }
+
+            .nav-triggers.mobile-open {
+                max-height: 100vh;
+                max-height: 100dvh;
+                opacity: 1;
+                pointer-events: auto;
+                overflow-y: auto;
+            }
+
+            .nav-trigger-btn {
+                width: 100%;
+                text-align: left;
+                font-size: 1.1rem;
+                padding: 18px 0;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .hero-banner {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+                height: auto;
+                padding: 0 0 48px 0;
+            }
+            .hero-media {
+                position: relative;
+                inset: auto;
+                width: 100%;
+                aspect-ratio: 16 / 9;
+                overflow: hidden;
+                z-index: auto;
+            }
+            .hero-content {
+                position: relative;
+                z-index: 2;
+                max-width: 100%;
+                padding: 32px 24px 0 24px;
+            }
+            .hero-content p {
+                margin: 0 auto;
+            }
+            .product-card {
+                width: 300px;
+            }
+            .product-image-container {
+                height: 400px;
+            }
+            .section-header, .prefooter-video-section {
                 padding-left: 24px;
                 padding-right: 24px;
+            }
+            footer {
+                padding: 40px 24px;
+            }
+            .footer-bottom-bar {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            .prefooter-video-container {
+                height: 320px;
+            }
+            .prefooter-video-caption {
+                bottom: 24px;
+                left: 24px;
+                right: 24px;
+            }
+            .prefooter-video-caption h3 {
+                font-size: 1.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand-logo {
+                font-size: 1.05rem;
+                letter-spacing: 0.1em;
+            }
+
+            .hero-content h1 {
+                font-size: 2.15rem;
+            }
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .history-image-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .history-img {
+                height: 280px;
+            }
+            .history-img:nth-child(2) {
+                margin-top: 0;
+            }
+
+            .product-card {
+                width: 250px;
+            }
+            .product-image-container {
+                height: 320px;
+            }
+
+            .prefooter-video-caption h3 {
+                font-size: 1.4rem;
+            }
+            .prefooter-video-caption span {
+                font-size: 0.72rem;
+            }
+
+            .megamenu-content {
+                padding: 24px;
+                gap: 28px;
+            }
+            .menu-col-left h3 {
+                font-size: 1.75rem;
+            }
+            .menu-col-left p {
+                font-size: 0.9rem;
+            }
+            .menu-links-list {
+                gap: 14px;
+            }
+            .menu-links-list li a {
+                font-size: 1.4rem;
+            }
+            .menu-close {
+                top: 20px;
+                right: 24px;
+            }
+
+            .footer-heading {
+                font-size: 0.8rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Studio Lighting Mouse Tracker Element -->
-    <div id="studio-glow"></div>
-
+    <!-- V-Style Navigation Header -->
     <header id="site-header">
         <a href="#" class="brand-logo">Ember and Oak</a>
-        <button class="menu-btn">Menu</button>
+        <nav class="nav-triggers">
+            <button class="nav-trigger-btn" data-target="menu-collections">Collections</button>
+            <button class="nav-trigger-btn" data-target="menu-story">The Brand</button>
+            <button class="nav-trigger-btn" data-target="menu-contact">Inquiries</button>
+        </nav>
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle">Menu</button>
     </header>
 
-    <section class="hero">
+    <!-- Fullscreen Architectural Megamenu Overlay -->
+    <div class="megamenu-overlay" id="megamenu-overlay">
+        <button class="menu-close" id="menu-close-btn">Close [X]</button>
+        
+        <!-- Panel 1: Collections -->
+        <div class="megamenu-content" id="menu-collections">
+            <div class="menu-col-left">
+                <h3>Curated Living Spaces</h3>
+                <p>Explore our master series. Each piece is meticulously forged from rare hardwoods and brushed raw metals, designed to anchor modern spatial architecture.</p>
+            </div>
+            <div>
+                <ul class="menu-links-list">
+                    <li><a href="#collection-ticker">The Monolithic Series</a></li>
+                    <li><a href="#collection-ticker">Brutalist Seating</a></li>
+                    <li><a href="#collection-ticker">Architectural Lighting</a></li>
+                    <li><a href="#collection-ticker">Raw Oak Credenzas</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Panel 2: The Brand -->
+        <div class="megamenu-content" id="menu-story">
+            <div class="menu-col-left">
+                <h3>Materiality & Heritage</h3>
+                <p>We craft uncompromised furniture that respects the raw state of nature. Discover our philosophy on sustainable sourcing and structural purity.</p>
+            </div>
+            <div>
+                <ul class="menu-links-list">
+                    <li><a href="#history-section">Our Philosophy</a></li>
+                    <li><a href="#history-section">The Artisan Guild</a></li>
+                    <li><a href="#history-section">Sustainable Timber</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Panel 3: Inquiries -->
+        <div class="megamenu-content" id="menu-contact">
+            <div class="menu-col-left">
+                <h3>Global Inquiries</h3>
+                <p>As an introductory design house, we connect clients directly with our master showrooms, interior architects, and global stockists.</p>
+            </div>
+            <div>
+                <ul class="menu-links-list">
+                    <li><a href="mailto:concierge@emberandoak.com">Concierge Email</a></li>
+                    <li><a href="#">Showroom Locations</a></li>
+                    <li><a href="#">Press & Editorial</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Video Banner Section -->
+    <section class="hero-banner">
+        <div class="hero-media">
+            <video autoplay muted loop playsinline>
+                <source src="14741613_3840_2160_25fps.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="hero-overlay"></div>
+        </div>
         <div class="hero-content">
             <h1>Sculpted by Nature, Finished by Hand</h1>
             <p>Ember and Oak presents a radical synthesis of industrial materiality and organic warmth. Architectural furnishings designed for contemporary spaces.</p>
         </div>
     </section>
 
-    <section class="collections-section">
+    <!-- Brand History Section -->
+    <section class="brand-history" id="history-section">
+        <div class="history-text">
+            <h2>Rooted in structural honesty and material depth.</h2>
+            <p>Founded on the principle that furniture should serve as foundational architecture rather than temporary decor, Ember and Oak explores the tension between blackened steel and deeply grained organic wood.</p>
+            <p>Every silhouette is deliberately restrained. We reject excess ornamentation, allowing the native character, knots, and grain patterns of sustainable timber to dictate the personality of each creation.</p>
+        </div>
+        <div class="history-image-grid">
+            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80" alt="Interior craftsmanship" class="history-img">
+            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80" alt="Minimalist wooden furniture" class="history-img">
+        </div>
+    </section>
+
+    <!-- Collection Infinite Auto-Loop Section (Image-Only, 0px spacing) -->
+    <section class="collection-section" id="collection-ticker">
         <div class="section-header">
             <h2>Current Collections</h2>
-            <p>Explore curated architectural pieces built with structural honesty.</p>
         </div>
 
-        <div class="asymmetrical-grid">
-            <!-- Card 1 -->
-            <div class="collection-card col-span-7 tall">
-                <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80" alt="Modular Sofa">
-                <div class="card-info">
-                    <div>
-                        <span>Living Systems</span>
-                        <h3>The Brutalist Sectional</h3>
-                    </div>
-                    <button class="ar-trigger-btn" onclick="openAR()">AR View</button>
-                </div>
-            </div>
+        <div class="ticker-container">
+            <div class="ticker-track" id="ticker-track">
+                
+                <!-- ======================================================== -->
+                <!-- SET 1: INSERT YOUR 7-8 IMAGE URLS OR FILE PATHS BELOW -->
+                <!-- ======================================================== -->
 
-            <!-- Card 2 -->
-            <div class="collection-card col-span-5">
-                <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1000&q=80" alt="Lounge Chair">
-                <div class="card-info">
-                    <div>
-                        <span>Seating</span>
-                        <h3>Oak & Woolen Armchair</h3>
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-rebornfilmes-29887342.jpg?v=1785097790" alt="Collection Image 1">
                     </div>
-                    <button class="ar-trigger-btn" onclick="openAR()">AR View</button>
-                </div>
-            </div>
+                </article>
 
-            <!-- Card 3 -->
-            <div class="collection-card col-span-5">
-                <img src="https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1000&q=80" alt="Minimalist Table">
-                <div class="card-info">
-                    <div>
-                        <span>Surface Architecture</span>
-                        <h3>Charred Timber Console</h3>
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-wolfart-37914509.jpg?v=1785097789" alt="Collection Image 2">
                     </div>
-                    <button class="ar-trigger-btn" onclick="openAR()">AR View</button>
-                </div>
-            </div>
+                </article>
 
-            <!-- Card 4 -->
-            <div class="collection-card col-span-7 tall">
-                <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80" alt="Bedroom Living">
-                <div class="card-info">
-                    <div>
-                        <span>Sanctuary</span>
-                        <h3>Raw Linen Platform Bed</h3>
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-mart-production-7679821_43bf08fc-4e61-4d83-a29a-3ecc527e220d.jpg?v=1785097664" alt="Collection Image 3">
                     </div>
-                    <button class="ar-trigger-btn" onclick="openAR()">AR View</button>
-                </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-sudelermii-245055019-12407364_c7c0b0ca-7428-4fc2-8857-75829fc43925.jpg?v=1785097664" alt="Collection Image 4">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-m-e-r-v-e-42708268-15998821_b4a7a387-fa11-408d-8877-fd13f845392f.jpg?v=1785097663" alt="Collection Image 5">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-kseniachernaya-5806984_148793a4-455d-4ac7-b955-efa7df0de745.jpg?v=1785097663" alt="Collection Image 6">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-darya-grey_owl-132130036-16763513.jpg?v=1785097662" alt="Collection Image 7">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-osicooked-33937074_5c5f3b7d-a01e-4440-a92d-87e15ebf1879.jpg?v=1785097662" alt="Collection Image 8">
+                    </div>
+                </article>
+
+
+                <!-- ======================================================== -->
+                <!-- SET 2: DUPLICATE COPIES FOR SEAMLESS INFINITE LOOPING    -->
+                <!-- (Make sure these match your 8 images above)             -->
+                <!-- ======================================================== -->
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-rebornfilmes-29887342.jpg?v=1785097790" alt="Collection Image 1">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-wolfart-37914509.jpg?v=1785097789" alt="Collection Image 2">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-mart-production-7679821_43bf08fc-4e61-4d83-a29a-3ecc527e220d.jpg?v=1785097664" alt="Collection Image 3">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-sudelermii-245055019-12407364_c7c0b0ca-7428-4fc2-8857-75829fc43925.jpg?v=1785097664" alt="Collection Image 4">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-m-e-r-v-e-42708268-15998821_b4a7a387-fa11-408d-8877-fd13f845392f.jpg?v=1785097663" alt="Collection Image 5">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-kseniachernaya-5806984_148793a4-455d-4ac7-b955-efa7df0de745.jpg?v=1785097663" alt="Collection Image 6">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-darya-grey_owl-132130036-16763513.jpg?v=1785097662" alt="Collection Image 7">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-osicooked-33937074_5c5f3b7d-a01e-4440-a92d-87e15ebf1879.jpg?v=1785097662" alt="Collection Image 8">
+                    </div>
+                </article>
+
             </div>
         </div>
     </section>
 
-    <!-- Immersive AR Modal Viewer Container -->
-    <div id="ar-modal">
-        <button class="close-ar" onclick="closeAR()">Close [x]</button>
-        <!-- Standard placeholder 3D asset model viewer -->
-        <model-viewer src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" alt="3D Architectural Furniture Preview" auto-rotate camera-controls ar></model-viewer>
-    </div>
+    <!-- Pre-Footer Video Section -->
+    <section class="prefooter-video-section">
+        <div class="prefooter-video-container">
+            <video autoplay muted loop playsinline>
+                <source src="https://cdn.shopify.com/videos/c/o/v/05b6a2946d7d4ca6915d1aa3455de114.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="prefooter-video-caption">
+                <span>Craftsmanship in Motion</span>
+                <h3>Behind the Studio Doors</h3>
+            </div>
+        </div>
+    </section>
 
+    <!-- Vitra-Style Structured Footer Menu -->
     <footer>
-        <p>&copy; 2026 Ember and Oak Studio. All rights reserved.</p>
-        <p>Architectural Living Archive</p>
+        <div class="footer-grid">
+            <!-- Column 1: Products & Professionals -->
+            <div class="footer-column">
+                <h4 class="footer-heading">Products</h4>
+                <ul class="footer-links-list">
+                    <li><a href="#">All Products</a></li>
+                    <li><a href="#">New Products</a></li>
+                    <li><a href="#">Designer</a></li>
+                    <li><a href="#">Spare parts</a></li>
+                    <li><a href="#">Manufacturer warranty</a></li>
+                    <li><a href="#">Colours & materials</a></li>
+                </ul>
+
+                <h4 class="footer-heading" style="margin-top: 40px;">Professionals</h4>
+                <ul class="footer-links-list">
+                    <li><a href="#">Downloads</a></li>
+                    <li><a href="#">Projects</a></li>
+                    <li><a href="#">Our Clients</a></li>
+                    <li><a href="#">Tools</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 2: About Brand -->
+            <div class="footer-column">
+                <h4 class="footer-heading">About Ember & Oak</h4>
+                <ul class="footer-links-list">
+                    <li><a href="#">Facts</a></li>
+                    <li><a href="#">Studio Campus</a></li>
+                    <li><a href="#">Sustainability</a></li>
+                    <li><a href="#">Magazine</a></li>
+                    <li><a href="#">Jobs & Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Contact & Legal -->
+            <div class="footer-column">
+                <h4 class="footer-heading">Contact</h4>
+                <ul class="footer-links-list">
+                    <li><a href="#">Contact Studio</a></li>
+                    <li><a href="#">Find Showrooms</a></li>
+                    <li><a href="#">Global Companies</a></li>
+                    <li><a href="#">Subscribe to the newsletter</a></li>
+                    <li><a href="#">Circle Stores</a></li>
+                </ul>
+
+                <h4 class="footer-heading" style="margin-top: 40px;">Legal</h4>
+                <ul class="footer-links-list">
+                    <li><a href="#">Distribution rights</a></li>
+                    <li><a href="#">Imprint</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+            <span>&copy; 2026 Ember and Oak Studio. All rights reserved.</span>
+            <span>Architectural Living Archive</span>
+        </div>
     </footer>
 
+    <!-- JavaScript Layer -->
     <script>
-        // Mouse Tracking for Warm Studio Radial Glow Lighting
-        const glowElement = document.getElementById('studio-glow');
-        window.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth) * 100;
-            const y = (e.clientY / window.innerHeight) * 100;
-            glowElement.style.setProperty('--mouse-x', `${x}%`);
-            glowElement.style.setProperty('--mouse-y', `${y}%`);
-        });
-
-        // Header Scroll Transition State
+        /* --- HEADER SCROLL EFFECT --- */
         const header = document.getElementById('site-header');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
@@ -425,13 +1012,56 @@
             }
         });
 
-        // AR Modal Interaction Handlers
-        const arModal = document.getElementById('ar-modal');
-        function openAR() {
-            arModal.classList.add('active');
-        }
-        function closeAR() {
-            arModal.classList.remove('active');
+        /* --- MOBILE MENU TOGGLE --- */
+        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        const navTriggersEl = document.querySelector('.nav-triggers');
+
+        mobileToggle.addEventListener('click', () => {
+            const isOpen = navTriggersEl.classList.toggle('mobile-open');
+            mobileToggle.textContent = isOpen ? 'Close [X]' : 'Menu';
+            document.body.style.overflow = isOpen ? 'hidden' : 'auto';
+        });
+
+        /* --- VITRA-STYLE MEGAMENU LOGIC --- */
+        const triggerBtns = document.querySelectorAll('.nav-trigger-btn');
+        const overlay = document.getElementById('megamenu-overlay');
+        const closeBtn = document.getElementById('menu-close-btn');
+        const menuPanels = document.querySelectorAll('.megamenu-content');
+
+        triggerBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Close the mobile dropdown first, so it doesn't sit behind the fullscreen overlay
+                navTriggersEl.classList.remove('mobile-open');
+                mobileToggle.textContent = 'Menu';
+
+                const targetId = btn.getAttribute('data-target');
+                
+                triggerBtns.forEach(b => b.classList.remove('active'));
+                menuPanels.forEach(p => p.classList.remove('active-panel'));
+                
+                btn.classList.add('active');
+                const targetPanel = document.getElementById(targetId);
+                if (targetPanel) {
+                    targetPanel.classList.add('active-panel');
+                }
+                
+                overlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        closeBtn.addEventListener('click', closeModal);
+        
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeModal();
+            }
+        });
+
+        function closeModal() {
+            overlay.classList.remove('open');
+            triggerBtns.forEach(b => b.classList.remove('active'));
+            document.body.style.overflow = 'auto';
         }
     </script>
 </body>
