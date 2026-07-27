@@ -1,425 +1,951 @@
-<style>
-    /* --- CSS RESET & BASE STYLES --- */
-    *, *::before, *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        background-color: #0d0d0d;
-        color: #f5f5f7;
-        line-height: 1.6;
-        overflow-x: hidden;
-    }
-
-    /* --- SITE HEADER & NAVIGATION --- */
-    #site-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 24px 48px;
-        z-index: 1000;
-        background: linear-gradient(to bottom, rgba(13,13,13,0.8), transparent);
-        transition: background-color 0.4s ease, padding 0.4s ease;
-    }
-
-    #site-header.scrolled {
-        background: rgba(13, 13, 13, 0.95);
-        backdrop-filter: blur(10px);
-        padding: 16px 48px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .brand-logo {
-        font-size: 1.25rem;
-        font-weight: 600;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: #fff;
-        text-decoration: none;
-    }
-
-    .nav-triggers {
-        display: flex;
-        gap: 32px;
-    }
-
-    .nav-trigger-btn {
-        background: none;
-        border: none;
-        color: #a1a1a6;
-        font-size: 0.95rem;
-        cursor: pointer;
-        transition: color 0.3s ease;
-        font-weight: 400;
-    }
-
-    .nav-trigger-btn:hover, .nav-trigger-btn.active {
-        color: #fff;
-    }
-
-    .mobile-menu-toggle {
-        display: none;
-        background: none;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: #fff;
-        padding: 8px 16px;
-        font-size: 0.85rem;
-        cursor: pointer;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    /* --- FULLSCREEN MEGAMENU OVERLAY --- */
-    .megamenu-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        background-color: rgba(13, 13, 13, 0.98);
-        z-index: 1100;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.4s ease, visibility 0.4s ease;
-    }
-
-    .megamenu-overlay.open {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .menu-close {
-        position: absolute;
-        top: 32px;
-        right: 48px;
-        background: none;
-        border: none;
-        color: #fff;
-        font-size: 1rem;
-        cursor: pointer;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-    }
-
-    .megamenu-content {
-        display: none;
-        width: 80%;
-        max-width: 1000px;
-        grid-template-columns: 1fr 1fr;
-        gap: 64px;
-        align-items: center;
-    }
-
-    .megamenu-content.active-panel {
-        display: grid;
-    }
-
-    .menu-col-left h3 {
-        font-size: 2.25rem;
-        font-weight: 400;
-        margin-bottom: 16px;
-        letter-spacing: -0.02em;
-    }
-
-    .menu-col-left p {
-        color: #86868b;
-        font-size: 1rem;
-        line-height: 1.5;
-    }
-
-    .menu-links-list {
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .menu-links-list li a {
-        color: #f5f5f7;
-        text-decoration: none;
-        font-size: 1.75rem;
-        font-weight: 300;
-        transition: color 0.3s ease, padding-left 0.3s ease;
-    }
-
-    .menu-links-list li a:hover {
-        color: #d4af37;
-        padding-left: 8px;
-    }
-
-    /* --- HERO BANNER SECTION --- */
-    .hero-banner {
-        position: relative;
-        width: 100%;
-        height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        overflow: hidden;
-    }
-
-    .hero-media {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-    }
-
-    .hero-media video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.45);
-    }
-
-    .hero-content {
-        position: relative;
-        z-index: 2;
-        max-width: 800px;
-        padding: 0 24px;
-    }
-
-    .hero-content h1 {
-        font-size: 3.5rem;
-        font-weight: 400;
-        letter-spacing: -0.03em;
-        margin-bottom: 20px;
-        color: #fff;
-    }
-
-    .hero-content p {
-        font-size: 1.15rem;
-        color: #d2d2d7;
-        font-weight: 300;
-        line-height: 1.6;
-    }
-
-    /* --- BRAND HISTORY SECTION --- */
-    .brand-history {
-        padding: 120px 48px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 80px;
-        align-items: center;
-        max-width: 1400px;
-        margin: 0 auto;
-    }
-
-    .history-text h2 {
-        font-size: 2.5rem;
-        font-weight: 400;
-        line-height: 1.2;
-        margin-bottom: 24px;
-        letter-spacing: -0.02em;
-    }
-
-    .history-text p {
-        color: #86868b;
-        font-size: 1.05rem;
-        margin-bottom: 16px;
-    }
-
-    .history-image-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-    }
-
-    .history-img {
-        width: 100%;
-        height: 380px;
-        object-fit: cover;
-        border-radius: 4px;
-    }
-
-    .history-img:nth-child(2) {
-        margin-top: 40px;
-    }
-
-    /* --- COLLECTION TICKER SECTION --- */
-    .collection-section {
-        padding: 80px 0;
-        background: #09090b;
-        overflow: hidden;
-    }
-
-    .section-header {
-        padding: 0 48px 40px 48px;
-        max-width: 1400px;
-        margin: 0 auto;
-    }
-
-    .section-header h2 {
-        font-size: 2rem;
-        font-weight: 400;
-        letter-spacing: -0.01em;
-    }
-
-    .ticker-container {
-        display: flex;
-        width: 100%;
-        overflow-x: auto;
-        scrollbar-width: none; /* Firefox */
-    }
-
-    .ticker-container::-webkit-scrollbar {
-        display: none; /* Safari and Chrome */
-    }
-
-    .ticker-track {
-        display: flex;
-        gap: 20px;
-        padding: 0 24px;
-        animation: tickerScroll 40s linear infinite;
-    }
-
-    .product-card {
-        flex: 0 0 auto;
-        width: 320px;
-    }
-
-    .product-image-container {
-        width: 100%;
-        height: 400px;
-        border-radius: 4px;
-        overflow: hidden;
-    }
-
-    .product-image-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.6s ease;
-    }
-
-    .product-card:hover .product-image-container img {
-        transform: scale(1.04);
-    }
-
-    @keyframes tickerScroll {
-        0% {
-            transform: translateX(0);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ember and Oak — Architectural Living</title>
+    <style>
+        /* --- CSS RESET & BASE STYLES --- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-        100% {
-            transform: translateX(-50%);
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0d0d0d;
+            color: #f5f5f7;
+            line-height: 1.6;
+            overflow-x: hidden;
         }
-    }
 
-    /* --- PRE-FOOTER VIDEO SECTION --- */
-    .prefooter-video-section {
-        padding: 40px 48px 120px 48px;
-        max-width: 1400px;
-        margin: 0 auto;
-    }
+        /* --- SITE HEADER & NAVIGATION --- */
+        #site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 48px;
+            z-index: 1000;
+            background: linear-gradient(to bottom, rgba(13,13,13,0.8), transparent);
+            transition: background-color 0.4s ease, padding 0.4s ease;
+        }
 
-    .prefooter-video-container {
-        position: relative;
-        width: 100%;
-        height: 500px;
-        border-radius: 6px;
-        overflow: hidden;
-    }
+        #site-header.scrolled {
+            background: rgba(13, 13, 13, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 48px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-    .prefooter-video-container video {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+        .brand-logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #fff;
+            text-decoration: none;
+        }
 
-    .prefooter-video-caption {
-        position: absolute;
-        bottom: 40px;
-        left: 40px;
-        z-index: 2;
-    }
+        .nav-triggers {
+            display: flex;
+            gap: 32px;
+        }
 
-    .prefooter-video-caption span {
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.15em;
-        color: #d4af37;
-        display: block;
-        margin-bottom: 8px;
-    }
+        .nav-trigger-btn {
+            background: none;
+            border: none;
+            color: #a1a1a6;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-weight: 400;
+        }
 
-    .prefooter-video-caption h3 {
-        font-size: 2rem;
-        font-weight: 400;
-        color: #fff;
-    }
+        .nav-trigger-btn:hover, .nav-trigger-btn.active {
+            color: #fff;
+        }
 
-    /* --- FOOTER STYLES --- */
-    footer {
-        background: #050505;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 80px 48px 40px 48px;
-    }
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
 
-    .footer-grid {
-        max-width: 1400px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 60px;
-    }
+        /* --- FULLSCREEN MEGAMENU OVERLAY --- */
+        .megamenu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(13, 13, 13, 0.98);
+            z-index: 1100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
 
-    .footer-heading {
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.15em;
-        color: #86868b;
-        margin-bottom: 20px;
-    }
+        .megamenu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
 
-    .footer-links-list {
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
+        .menu-close {
+            position: absolute;
+            top: 32px;
+            right: 48px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
 
-    .footer-links-list li a {
-        color: #f5f5f7;
-        text-decoration: none;
-        font-size: 0.95rem;
-        font-weight: 300;
-        transition: color 0.3s ease;
-    }
+        .megamenu-content {
+            display: none;
+            width: 80%;
+            max-width: 1000px;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
 
-    .footer-links-list li a:hover {
-        color: #d4af37;
-    }
+        .megamenu-content.active-panel {
+            display: grid;
+        }
 
-    .footer-bottom-bar {
-        max-width: 1400px;
-        margin: 80px auto 0 auto;
-        padding-top: 24px;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 0.85rem;
-        color: #636366;
-    }
-</style>
+        .menu-col-left h3 {
+            font-size: 2.25rem;
+            font-weight: 400;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .menu-col-left p {
+            color: #86868b;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .menu-links-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .menu-links-list li a {
+            color: #f5f5f7;
+            text-decoration: none;
+            font-size: 1.75rem;
+            font-weight: 300;
+            transition: color 0.3s ease, padding-left 0.3s ease;
+        }
+
+        .menu-links-list li a:hover {
+            color: #d4af37;
+            padding-left: 8px;
+        }
+
+        /* --- HERO BANNER SECTION --- */
+        .hero-banner {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-media {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-media video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 24px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 400;
+            letter-spacing: -0.03em;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .hero-content p {
+            font-size: 1.15rem;
+            color: #d2d2d7;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* --- BRAND HISTORY SECTION --- */
+        .brand-history {
+            padding: 120px 48px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .history-text h2 {
+            font-size: 2.5rem;
+            font-weight: 400;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        .history-text p {
+            color: #86868b;
+            font-size: 1.05rem;
+            margin-bottom: 16px;
+        }
+
+        .history-image-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .history-img {
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .history-img:nth-child(2) {
+            margin-top: 40px;
+        }
+
+        /* --- COLLECTION TICKER SECTION --- */
+        .collection-section {
+            padding: 80px 0;
+            background: #09090b;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 0 48px 40px 48px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        .ticker-container {
+            display: flex;
+            width: 100%;
+            overflow-x: auto;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .ticker-container::-webkit-scrollbar {
+            display: none; /* Safari and Chrome */
+        }
+
+        .ticker-track {
+            display: flex;
+            gap: 20px;
+            padding: 0 24px;
+            animation: tickerScroll 40s linear infinite;
+        }
+
+        .product-card {
+            flex: 0 0 auto;
+            width: 320px;
+        }
+
+        .product-image-container {
+            width: 100%;
+            height: 400px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .product-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .product-card:hover .product-image-container img {
+            transform: scale(1.04);
+        }
+
+        @keyframes tickerScroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* --- PRE-FOOTER VIDEO SECTION --- */
+        .prefooter-video-section {
+            padding: 40px 48px 120px 48px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .prefooter-video-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .prefooter-video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .prefooter-video-caption {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            z-index: 2;
+        }
+
+        .prefooter-video-caption span {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #d4af37;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .prefooter-video-caption h3 {
+            font-size: 2rem;
+            font-weight: 400;
+            color: #fff;
+        }
+
+        /* --- FOOTER STYLES --- */
+        footer {
+            background: #050505;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 80px 48px 40px 48px;
+        }
+
+        .footer-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 60px;
+        }
+
+        .footer-heading {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #86868b;
+            margin-bottom: 20px;
+        }
+
+        .footer-links-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links-list li a {
+            color: #f5f5f7;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 300;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links-list li a:hover {
+            color: #d4af37;
+        }
+
+        .footer-bottom-bar {
+            max-width: 1400px;
+            margin: 80px auto 0 auto;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #636366;
+        }
+
+        /* --- MEDIA QUERIES --- */
+        @media (max-width: 1024px) {
+            #site-header {
+                padding: 20px 24px;
+            }
+            .brand-history {
+                grid-template-columns: 1fr;
+                padding: 80px 24px;
+                gap: 48px;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
+            .megamenu-content {
+                width: 90%;
+                gap: 32px;
+            }
+        }
+
+        @media (max-width: 749px) {
+            .nav-triggers {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: rgba(13, 13, 13, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 24px;
+                gap: 20px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                transform: translateY(-150%);
+                transition: transform 0.4s ease;
+            }
+            .nav-triggers.mobile-open {
+                transform: translateY(0);
+            }
+            .mobile-menu-toggle {
+                display: block;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            footer {
+                padding: 40px 24px;
+            }
+            .footer-bottom-bar {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            .prefooter-video-container {
+                height: 320px;
+            }
+            .prefooter-video-caption {
+                bottom: 24px;
+                left: 24px;
+                right: 24px;
+            }
+            .prefooter-video-caption h3 {
+                font-size: 1.7rem;
+            }
+            .prefooter-video-container, 
+            .banner__media, 
+            .hero-banner, 
+            div[class*="video"] {
+                height: 450px !important;
+                min-height: 450px !important;
+            }
+            .prefooter-video-container video, 
+            .banner__media video, 
+            .hero-banner video, 
+            video {
+                object-fit: cover !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand-logo {
+                font-size: 1.05rem;
+                letter-spacing: 0.1em;
+            }
+            .hero-content h1 {
+                font-size: 2.15rem;
+            }
+            .hero-content p {
+                font-size: 1rem;
+            }
+            .history-image-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .history-img {
+                height: 280px;
+            }
+            .history-img:nth-child(2) {
+                margin-top: 0;
+            }
+            .product-card {
+                width: 250px;
+            }
+            .product-image-container {
+                height: 320px;
+            }
+            .prefooter-video-caption h3 {
+                font-size: 1.4rem;
+            }
+            .prefooter-video-caption span {
+                font-size: 0.72rem;
+            }
+            .megamenu-content {
+                padding: 24px;
+                gap: 28px;
+                grid-template-columns: 1fr;
+            }
+            .menu-col-left h3 {
+                font-size: 1.75rem;
+            }
+            .menu-col-left p {
+                font-size: 0.9rem;
+            }
+            .menu-links-list {
+                gap: 14px;
+            }
+            .menu-links-list li a {
+                font-size: 1.4rem;
+            }
+            .menu-close {
+                top: 20px;
+                right: 24px;
+            }
+            .footer-heading {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+    <!-- GSAP & ScrollTrigger Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+<body>
+
+    <!-- V-Style Navigation Header -->
+    <header id="site-header">
+        <a href="#" class="brand-logo">Ember and Oak</a>
+        <nav class="nav-triggers">
+            <button class="nav-trigger-btn" data-target="menu-collections">Collections</button>
+            <button class="nav-trigger-btn" data-target="menu-story">The Brand</button>
+            <button class="nav-trigger-btn" data-target="menu-contact">Inquiries</button>
+        </nav>
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle">Menu</button>
+    </header>
+
+    <!-- Fullscreen Architectural Megamenu Overlay -->
+    <div class="megamenu-overlay" id="megamenu-overlay">
+        <button class="menu-close" id="menu-close-btn">Close [X]</button>
+        
+        <!-- Panel 1: Collections -->
+        <div class="megamenu-content" id="menu-collections">
+            <div class="menu-col-left">
+                <h3>Curated Living Spaces</h3>
+                <p>Explore our master series. Each piece is meticulously forged from rare hardwoods and brushed raw metals, designed to anchor modern spatial architecture.</p>
+            </div>
+            <div>
+                <ul class="menu-links-list">
+                    <li><a href="#collection-ticker">The Monolithic Series</a></li>
+                    <li><a href="#collection-ticker">Brutalist Seating</a></li>
+                    <li><a href="#collection-ticker">Architectural Lighting</a></li>
+                    <li><a href="#collection-ticker">Raw Oak Credenzas</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Panel 2: The Brand -->
+        <div class="megamenu-content" id="menu-story">
+            <div class="menu-col-left">
+                <h3>Materiality & Heritage</h3>
+                <p>We craft uncompromised furniture that respects the raw state of nature. Discover our philosophy on sustainable sourcing and structural purity.</p>
+            </div>
+            <div>
+                <ul class="menu-links-list">
+                    <li><a href="#history-section">Our Philosophy</a></li>
+                    <li><a href="#history-section">The Artisan Guild</a></li>
+                    <li><a href="#history-section">Sustainable Timber</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Panel 3: Inquiries -->
+        <div class="megamenu-content" id="menu-contact">
+            <div class="menu-col-left">
+                <h3>Global Inquiries</h3>
+                <p>As an introductory design house, we connect clients directly with our master showrooms, interior architects, and global stockists.</p>
+            </div>
+            <div>
+                <ul class="menu-links-list">
+                    <li><a href="mailto:concierge@emberandoak.com">Concierge Email</a></li>
+                    <li><a href="#">Showroom Locations</a></li>
+                    <li><a href="#">Press & Editorial</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Video Banner Section -->
+    <section class="hero-banner">
+        <div class="hero-media">
+            <video autoplay muted loop playsinline>
+                <source src="14741613_3840_2160_25fps.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <h1>Sculpted by Nature, Finished by Hand</h1>
+            <p>Ember and Oak presents a radical synthesis of industrial materiality and organic warmth. Architectural furnishings designed for contemporary spaces.</p>
+        </div>
+    </section>
+
+    <!-- Brand History Section -->
+    <section class="brand-history" id="history-section">
+        <div class="history-text">
+            <h2>Rooted in structural honesty and material depth.</h2>
+            <p>Founded on the principle that furniture should serve as foundational architecture rather than temporary decor, Ember and Oak explores the tension between blackened steel and deeply grained organic wood.</p>
+            <p>Every silhouette is deliberately restrained. We reject excess ornamentation, allowing the native character, knots, and grain patterns of sustainable timber to dictate the personality of each creation.</p>
+        </div>
+        <div class="history-image-grid">
+            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80" alt="Interior craftsmanship" class="history-img">
+            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80" alt="Minimalist wooden furniture" class="history-img">
+        </div>
+    </section>
+
+    <!-- Collection Infinite Auto-Loop Section (Image-Only, 0px spacing) -->
+    <section class="collection-section" id="collection-ticker">
+        <div class="section-header">
+            <h2>Current Collections</h2>
+        </div>
+
+        <div class="ticker-container">
+            <div class="ticker-track" id="ticker-track">
+                
+                <!-- SET 1: 8 IMAGES -->
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-rebornfilmes-29887342.jpg?v=1785097790" alt="Collection Image 1">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-wolfart-37914509.jpg?v=1785097789" alt="Collection Image 2">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-mart-production-7679821_43bf08fc-4e61-4d83-a29a-3ecc527e220d.jpg?v=1785097664" alt="Collection Image 3">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-sudelermii-245055019-12407364_c7c0b0ca-7428-4fc2-8857-75829fc43925.jpg?v=1785097664" alt="Collection Image 4">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-m-e-r-v-e-42708268-15998821_b4a7a387-fa11-408d-8877-fd13f845392f.jpg?v=1785097663" alt="Collection Image 5">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-kseniachernaya-5806984_148793a4-455d-4ac7-b955-efa7df0de745.jpg?v=1785097663" alt="Collection Image 6">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-darya-grey_owl-132130036-16763513.jpg?v=1785097662" alt="Collection Image 7">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-osicooked-33937074_5c5f3b7d-a01e-4440-a92d-87e15ebf1879.jpg?v=1785097662" alt="Collection Image 8">
+                    </div>
+                </article>
+
+                <!-- SET 2: DUPLICATE COPIES FOR SEAMLESS INFINITE LOOPING -->
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-rebornfilmes-29887342.jpg?v=1785097790" alt="Collection Image 1">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-wolfart-37914509.jpg?v=1785097789" alt="Collection Image 2">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-mart-production-7679821_43bf08fc-4e61-4d83-a29a-3ecc527e220d.jpg?v=1785097664" alt="Collection Image 3">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-sudelermii-245055019-12407364_c7c0b0ca-7428-4fc2-8857-75829fc43925.jpg?v=1785097664" alt="Collection Image 4">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-m-e-r-v-e-42708268-15998821_b4a7a387-fa11-408d-8877-fd13f845392f.jpg?v=1785097663" alt="Collection Image 5">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-kseniachernaya-5806984_148793a4-455d-4ac7-b955-efa7df0de745.jpg?v=1785097663" alt="Collection Image 6">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-darya-grey_owl-132130036-16763513.jpg?v=1785097662" alt="Collection Image 7">
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image-container">
+                        <img src="https://cdn.shopify.com/s/files/1/0694/3991/4068/files/pexels-osicooked-33937074_5c5f3b7d-a01e-4440-a92d-87e15ebf1879.jpg?v=1785097662" alt="Collection Image 8">
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Pre-Footer Video Section -->
+    <section class="prefooter-video-section">
+        <div class="prefooter-video-container">
+            <video autoplay muted loop playsinline>
+                <source src="https://cdn.shopify.com/videos/c/o/v/05b6a2946d7d4ca6915d1aa3455de114.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="prefooter-video-caption">
+                <span>Craftsmanship in Motion</span>
+                <h3>Behind the Studio Doors</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vitra-Style Structured Footer Menu -->
+    <footer>
+        <div class="footer-grid">
+            <!-- Column 1: Products & Professionals -->
+            <div class="footer-column">
+                <h4 class="footer-heading">Products</h4>
+                <ul class="footer-links-list">
+                    <li><a href="#">All Products</a></li>
+                    <li><a href="#">New Products</a></li>
+                    <li><a href="#">Designer</a></li>
+                    <li><a href="#">Spare parts</a></li>
+                    <li><a href="#">Manufacturer warranty</a></li>
+                    <li><a href="#">Colours & materials</a></li>
+                </ul>
+
+                <h4 class="footer-heading" style="margin-top: 40px;">Professionals</h4>
+                <ul class="footer-links-list">
+                    <li><a href="#">Downloads</a></li>
+                    <li><a href="#">Projects</a></li>
+                    <li><a href="#">Our Clients</a></li>
+                    <li><a href="#">Tools</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 2: About Brand -->
+            <div class="footer-column">
+                <h4 class="footer-heading">About Ember & Oak</h4>
+                <ul class="footer-links-list">
+                    <li><a href="#">Facts</a></li>
+                    <li><a href="#">Studio Campus</a></li>
+                    <li><a href="#">Sustainability</a></li>
+                    <li><a href="#">Magazine</a></li>
+                    <li><a href="#">Jobs & Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Contact & Legal -->
+            <div class="footer-column">
+                <h4 class="footer-heading">Contact</h4>
+                <ul class="footer-links-list">
+                    <li><a href="#">Contact Studio</a></li>
+                    <li><a href="#">Find Showrooms</a></li>
+                    <li><a href="#">Global Companies</a></li>
+                    <li><a href="#">Subscribe to the newsletter</a></li>
+                    <li><a href="#">Circle Stores</a></li>
+                </ul>
+
+                <h4 class="footer-heading" style="margin-top: 40px;">Legal</h4>
+                <ul class="footer-links-list">
+                    <li><a href="#">Distribution rights</a></li>
+                    <li><a href="#">Imprint</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+            <span>&copy; 2026 Ember and Oak Studio. All rights reserved.</span>
+            <span>Architectural Living Archive</span>
+        </div>
+    </footer>
+
+    <!-- JavaScript Layer -->
+    <script>
+        /* --- HEADER SCROLL EFFECT --- */
+        const header = document.getElementById('site-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        /* --- MOBILE MENU TOGGLE --- */
+        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        const navTriggersEl = document.querySelector('.nav-triggers');
+
+        mobileToggle.addEventListener('click', () => {
+            const isOpen = navTriggersEl.classList.toggle('mobile-open');
+            mobileToggle.textContent = isOpen ? 'Close [X]' : 'Menu';
+            document.body.style.overflow = isOpen ? 'hidden' : 'auto';
+        });
+
+        /* --- VITRA-STYLE MEGAMENU LOGIC --- */
+        const triggerBtns = document.querySelectorAll('.nav-trigger-btn');
+        const overlay = document.getElementById('megamenu-overlay');
+        const closeBtn = document.getElementById('menu-close-btn');
+        const menuPanels = document.querySelectorAll('.megamenu-content');
+
+        triggerBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                navTriggersEl.classList.remove('mobile-open');
+                mobileToggle.textContent = 'Menu';
+
+                const targetId = btn.getAttribute('data-target');
+                
+                triggerBtns.forEach(b => b.classList.remove('active'));
+                menuPanels.forEach(p => p.classList.remove('active-panel'));
+                
+                btn.classList.add('active');
+                const targetPanel = document.getElementById(targetId);
+                if (targetPanel) {
+                    targetPanel.classList.add('active-panel');
+                }
+                
+                overlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        closeBtn.addEventListener('click', closeModal);
+        
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeModal();
+            }
+        });
+
+        function closeModal() {
+            overlay.classList.remove('open');
+            triggerBtns.forEach(b => b.classList.remove('active'));
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+    <script>
+        // Register GSAP ScrollTrigger Plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Parallax Depth Effect for Hero Content
+        gsap.to(".hero-content", {
+            y: -80,
+            opacity: 0.3,
+            ease: "none",
+            scrollTrigger: {
+                trigger: ".hero, .hero-banner",
+                start: "top top",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+
+        // Subtle Parallax Float on Collection Cards
+        gsap.utils.toArray(".collection-card").forEach((card, index) => {
+            gsap.to(card, {
+                y: index % 2 === 0 ? -30 : -50,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+        });
+    </script>
+</body>
+</html>
