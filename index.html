@@ -169,10 +169,11 @@
             width: 100%;
             height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+            align-items: flex-end; /* Align content to the bottom */
+            justify-content: flex-start; /* Align content to the left */
+            text-align: left; /* Left-align the text */
             overflow: hidden;
+            padding: 60px 48px; /* Padding for bottom-left placement */
         }
 
         .hero-media {
@@ -202,20 +203,19 @@
         .hero-content {
             position: relative;
             z-index: 2;
-            max-width: 800px;
-            padding: 0 24px;
+            max-width: 700px;
         }
 
         .hero-content h1 {
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 400;
             letter-spacing: -0.03em;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             color: #fff;
         }
 
         .hero-content p {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             color: #d2d2d7;
             font-weight: 300;
             line-height: 1.6;
@@ -434,6 +434,9 @@
             #site-header {
                 padding: 20px 24px;
             }
+            .hero-banner {
+                padding: 40px 24px;
+            }
             .brand-history {
                 grid-template-columns: 1fr;
                 padding: 80px 24px;
@@ -515,11 +518,14 @@
                 font-size: 1.05rem;
                 letter-spacing: 0.1em;
             }
+            .hero-banner {
+                padding: 30px 20px;
+            }
             .hero-content h1 {
-                font-size: 2.15rem;
+                font-size: 2rem;
             }
             .hero-content p {
-                font-size: 1rem;
+                font-size: 0.95rem;
             }
             .history-image-grid {
                 grid-template-columns: 1fr;
