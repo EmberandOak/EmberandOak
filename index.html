@@ -715,6 +715,26 @@
                 font-size: 0.8rem;
             }
         }
+        @media screen and (max-width: 749px) {
+    /* Target the video wrapper or container class used in your theme */
+    .prefooter-video-container, 
+    .banner__media, 
+    .hero-banner, 
+    div[class*="video"] {
+      height: 450px !important; /* Adjust this height (e.g., 450px or 50vh) to make the video taller */
+      min-height: 450px !important;
+    }
+    
+    /* Ensure the video itself stretches to cover the new expanded height */
+    .prefooter-video-container video, 
+    .banner__media video, 
+    .hero-banner video, 
+    video {
+      object-fit: cover !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
     </style>
     <!-- GSAP & ScrollTrigger Core Libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
