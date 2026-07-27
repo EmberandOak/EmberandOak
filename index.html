@@ -711,6 +711,9 @@
             }
         }
     </style>
+    <!-- GSAP & ScrollTrigger Core Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 </head>
 <body>
 
@@ -1064,5 +1067,36 @@
             document.body.style.overflow = 'auto';
         }
     </script>
+    <script>
+    // Register GSAP ScrollTrigger Plugin
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Parallax Depth Effect for Hero Content
+    gsap.to(".hero-content", {
+        y: -80, // Moves the text slightly faster/slower relative to scroll
+        opacity: 0.3, // Fades out smoothly as you scroll down
+        ease: "none",
+        scrollTrigger: {
+            trigger: ".hero, .hero-banner",
+            start: "top top",
+            end: "bottom top",
+            scrub: true // Ties the animation directly to the scrollbar movement
+        }
+    });
+
+    // Subtle Parallax Float on Collection Cards
+    gsap.utils.toArray(".collection-card").forEach((card, index) => {
+        gsap.to(card, {
+            y: index % 2 === 0 ? -30 : -50, // Staggered depth speeds for visual richness
+            ease: "none",
+            scrollTrigger: {
+                trigger: card,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+    });
+</script>
 </body>
 </html>
